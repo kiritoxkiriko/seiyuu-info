@@ -1,0 +1,10 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "nsy-station-api",
+  "main": "worker.py",
+  "compatibility_date": "2026-05-11",
+  "compatibility_flags": ["python_workers"],
+  "vars": {
+    "ALLOWED_ORIGINS": "http://localhost:4321,https://nsy-station.pages.dev"
+  }
+}

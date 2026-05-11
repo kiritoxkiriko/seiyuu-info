@@ -1,0 +1,15 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "nsy-station",
+  "main": "./dist/_worker.js/index.js",
+  "compatibility_date": "2026-05-11",
+  "compatibility_flags": ["nodejs_compat"],
+  "assets": {
+    "directory": "./dist",
+    "binding": "ASSETS",
+    "not_found_handling": "404-page"
+  },
+  "vars": {
+    "PUBLIC_API_BASE_URL": "http://localhost:8787"
+  }
+}

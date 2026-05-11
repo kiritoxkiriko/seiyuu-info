@@ -1,0 +1,22 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: light;
+  background: #f4f6f8;
+  color: #171a20;
+  font-family: Inter, ui-sans-serif, system-ui, "Hiragino Sans", "Yu Gothic", Meiryo, sans-serif;
+}
+
+body {
+  min-height: 100vh;
+  margin: 0;
+  background:
+    linear-gradient(180deg, #eef2f5 0%, #f7f8fa 42%, #f4f6f8 100%);
+}
+
+button,
+a {
+  -webkit-tap-highlight-color: transparent;
+}

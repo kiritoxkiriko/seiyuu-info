@@ -1,0 +1,168 @@
+{
+  "actors": [
+    {
+      "id": "yomiya-hina",
+      "name": "羊宮妃那",
+      "kana": "ようみや ひな",
+      "romanized": "Hina Youmiya",
+      "agency": "青二プロダクション",
+      "birthday": "3月26日",
+      "birthplace": "奈良県",
+      "profile_url": "https://www.aoni.co.jp/search/yomiya-hina.html",
+      "officialPhoto": {
+        "url": "https://www.aoni.co.jp/search/items/yomiya-hina.jpg",
+        "alt": "羊宮妃那 公式プロフィール写真",
+        "source": "青二プロダクション"
+      },
+      "gallery": [
+        {
+          "url": "https://www.aoni.co.jp/search/items/yomiya-hina.jpg",
+          "alt": "羊宮妃那 公式プロフィール写真",
+          "source": "青二プロダクション"
+        },
+        {
+          "url": "https://www.aoni.co.jp/search/items/yomiya-hina.jpg",
+          "alt": "羊宮妃那 宣材写真",
+          "source": "青二プロダクション"
+        }
+      ],
+      "specialties": ["ダンス", "関西弁"],
+      "hobbies": ["描画", "読書", "映画鑑賞", "音楽鑑賞", "アコースティックギター弾き語り", "作詞", "作曲"],
+      "roles": [
+        {"title": "僕の心のヤバイやつ", "character": "山田杏奈"},
+        {"title": "BanG Dream! It's MyGO!!!!!", "character": "高松燈"},
+        {"title": "その着せ替え人形は恋をする", "character": "乾心寿"},
+        {"title": "小市民シリーズ", "character": "小佐内ゆき"}
+      ],
+      "socialLinks": [
+        {"platform": "website", "label": "青二プロフィール", "url": "https://www.aoni.co.jp/search/yomiya-hina.html"}
+      ],
+      "eventernoteUrl": "https://www.eventernote.com/actors/search?keyword=%E7%BE%8A%E5%AE%AE%E5%A6%83%E9%82%A3"
+    },
+    {
+      "id": "aoki-hina",
+      "name": "青木陽菜",
+      "kana": "あおき ひな",
+      "romanized": "Hina Aoki",
+      "agency": "響",
+      "birthday": "1月5日",
+      "birthplace": "宮城県",
+      "profile_url": "https://hibiki-cast.jp/hibiki_f/aoki_hina/",
+      "officialPhoto": {
+        "url": "https://bm-echoes.com/wordpress/wp-content/uploads/2024/07/17145908/hinaaoki_artistphoto_tate_FIX_resize-e1752732015470.jpg",
+        "alt": "青木陽菜 アーティスト写真",
+        "source": "BM-ECHOES"
+      },
+      "gallery": [
+        {
+          "url": "https://bm-echoes.com/wordpress/wp-content/uploads/2024/07/17145908/hinaaoki_artistphoto_tate_FIX_resize-e1752732015470.jpg",
+          "alt": "青木陽菜 アーティスト写真",
+          "source": "BM-ECHOES"
+        },
+        {
+          "url": "https://bushiroad-music.com/wordpress/wp-content/uploads/2024/08/05140107/0e602073-1ba5-4a06-96ab-9ed8e6bc5008-1024x683.jpg",
+          "alt": "青木陽菜 関連ビジュアル",
+          "source": "ブシロードミュージック"
+        }
+      ],
+      "specialties": ["ピアノ", "歌"],
+      "hobbies": ["ギター", "弾き語り", "一人カラオケ", "ライブ鑑賞"],
+      "roles": [
+        {"title": "BanG Dream! It's MyGO!!!!!", "character": "要楽奈"},
+        {"title": "カードファイト!! ヴァンガード will+Dress Season2", "character": "ハロナ・ウォーカー"},
+        {"title": "少女☆歌劇 レヴュースタァライト -Re LIVE-", "character": "高千穂ステラ"},
+        {"title": "GINKA", "character": "ハナ"}
+      ],
+      "socialLinks": [
+        {"platform": "x", "label": "X", "url": "https://x.com/aoki__hina"},
+        {"platform": "instagram", "label": "Instagram", "url": "https://www.instagram.com/aoki_hina_official/"},
+        {"platform": "website", "label": "響プロフィール", "url": "https://hibiki-cast.jp/hibiki_f/aoki_hina/"}
+      ],
+      "eventernoteUrl": "https://www.eventernote.com/actors/search?keyword=%E9%9D%92%E6%9C%A8%E9%99%BD%E8%8F%9C"
+    }
+  ],
+  "events": [
+    {
+      "id": "hina-festival-2026",
+      "actorId": "aoki-hina",
+      "title": "青木陽菜 Presents Hina Festival 2026",
+      "date": "2026-03-01",
+      "category": "live",
+      "venue": "未設定",
+      "url": "https://bm-echoes.com/creators/aoki-hina/",
+      "source": "seed"
+    },
+    {
+      "id": "hibiki-style-omon-2026",
+      "actorId": "aoki-hina",
+      "title": "HiBiKi StYle+×王紋酒造 コラボ酒 青木陽菜 関連企画",
+      "date": "2026-05-07",
+      "category": "release",
+      "venue": "Online",
+      "url": "https://hibikifan.com/aoki_hina",
+      "source": "seed"
+    },
+    {
+      "id": "mygo-gathering-yomiya",
+      "actorId": "yomiya-hina",
+      "title": "迷子集会 関連出演",
+      "date": "2026-04-18",
+      "category": "broadcast",
+      "venue": "YouTube",
+      "url": "https://www.aoni.co.jp/search/yomiya-hina.html",
+      "source": "seed"
+    },
+    {
+      "id": "komorebi-yomiya",
+      "actorId": "yomiya-hina",
+      "title": "羊宮妃那のこもれびじかん",
+      "date": "2026-05-03",
+      "category": "broadcast",
+      "venue": "文化放送",
+      "url": "https://www.aoni.co.jp/search/yomiya-hina.html",
+      "source": "seed"
+    }
+  ],
+  "sns": [
+    {
+      "id": "aoki-x-1",
+      "actorId": "aoki-hina",
+      "platform": "x",
+      "postedAt": "2026-05-07T10:00:00+09:00",
+      "text": "HiBiKi StYle+ 関連のお知らせを公開しました。",
+      "url": "https://x.com/aoki__hina",
+      "kind": "original",
+      "mediaUrls": []
+    },
+    {
+      "id": "aoki-x-repost",
+      "actorId": "aoki-hina",
+      "platform": "x",
+      "postedAt": "2026-05-06T12:00:00+09:00",
+      "text": "repost sample filtered by API",
+      "url": "https://x.com/aoki__hina",
+      "kind": "repost",
+      "mediaUrls": []
+    },
+    {
+      "id": "aoki-ig-1",
+      "actorId": "aoki-hina",
+      "platform": "instagram",
+      "postedAt": "2026-05-01T21:00:00+09:00",
+      "text": "ライブと音楽活動の近況。",
+      "url": "https://www.instagram.com/aoki_hina_official/",
+      "kind": "original",
+      "mediaUrls": []
+    },
+    {
+      "id": "yomiya-web-1",
+      "actorId": "yomiya-hina",
+      "platform": "website",
+      "postedAt": "2026-04-11T09:00:00+09:00",
+      "text": "青二プロダクション公式プロフィールを更新。",
+      "url": "https://www.aoni.co.jp/search/yomiya-hina.html",
+      "kind": "original",
+      "mediaUrls": []
+    }
+  ]
+}
