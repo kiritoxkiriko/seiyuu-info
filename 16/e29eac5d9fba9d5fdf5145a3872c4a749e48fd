@@ -1,0 +1,39 @@
+.gitignore
+  39351b46592257cc 14
+  cd916791488b5e94 13
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.3.4",
+  "base_commit_sha": "16e29eac5d9fba9d5fdf5145a3872c4a749e48fd",
+  "prompts": {
+    "39351b46592257cc": {
+      "agent_id": {
+        "tool": "trae-cue",
+        "id": "ai_tab-icr-4947a5ba-1ab1-45cf-ad48-19318ab741c2",
+        "model": "default"
+      },
+      "human_author": "Codex <codex@local>",
+      "messages": [],
+      "total_additions": 1,
+      "total_deletions": 1,
+      "accepted_lines": 1,
+      "overriden_lines": 0
+    },
+    "cd916791488b5e94": {
+      "agent_id": {
+        "tool": "trae-cue",
+        "id": "ai_tab-icr-28e7d001-2a48-48c2-85a6-b92bd78e51b7",
+        "model": "default"
+      },
+      "human_author": "Codex <codex@local>",
+      "messages": [],
+      "total_additions": 1,
+      "total_deletions": 1,
+      "accepted_lines": 1,
+      "overriden_lines": 0
+    }
+  },
+  "attestation_metadata": {},
+  "remote_transcripts": {}
+}
