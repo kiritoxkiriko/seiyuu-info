@@ -2,6 +2,12 @@ node_modules/
 dist/
 .astro/
 .wrangler/
+.env
+.env.*
+!.env.example
+data/*.sqlite3
+data/*.sqlite3-*
+data/media/
 
 .venv/
 __pycache__/

@@ -35,9 +35,10 @@
         {"title": "小市民シリーズ", "character": "小佐内ゆき"}
       ],
       "socialLinks": [
+        {"platform": "x", "label": "X", "url": "https://x.com/Hina_Youmiya"},
         {"platform": "website", "label": "青二プロフィール", "url": "https://www.aoni.co.jp/search/yomiya-hina.html"}
       ],
-      "eventernoteUrl": "https://www.eventernote.com/actors/search?keyword=%E7%BE%8A%E5%AE%AE%E5%A6%83%E9%82%A3"
+      "eventernoteUrl": "https://www.eventernote.com/actors/%E7%BE%8A%E5%AE%AE%E5%A6%83%E9%82%A3/54104/events"
     },
     {
       "id": "aoki-hina",
@@ -78,7 +79,7 @@
         {"platform": "instagram", "label": "Instagram", "url": "https://www.instagram.com/aoki_hina_official/"},
         {"platform": "website", "label": "響プロフィール", "url": "https://hibiki-cast.jp/hibiki_f/aoki_hina/"}
       ],
-      "eventernoteUrl": "https://www.eventernote.com/actors/search?keyword=%E9%9D%92%E6%9C%A8%E9%99%BD%E8%8F%9C"
+      "eventernoteUrl": "https://www.eventernote.com/actors/%E9%9D%92%E6%9C%A8%E9%99%BD%E8%8F%9C/59830/events"
     }
   ],
   "events": [
@@ -155,12 +156,13 @@
       "mediaUrls": []
     },
     {
-      "id": "yomiya-web-1",
+      "id": "yomiya-x-1",
       "actorId": "yomiya-hina",
-      "platform": "website",
+      "platform": "x",
       "postedAt": "2026-04-11T09:00:00+09:00",
-      "text": "青二プロダクション公式プロフィールを更新。",
-      "url": "https://www.aoni.co.jp/search/yomiya-hina.html",
+      "text": "出演情報と近況をお知らせします。",
+      "detailText": "出演情報と近況をお知らせします。各イベントの詳細は固定ポストや公式サイトもあわせて確認してください。",
+      "url": "https://x.com/Hina_Youmiya",
       "kind": "original",
       "mediaUrls": []
     }

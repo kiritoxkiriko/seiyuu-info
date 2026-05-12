@@ -1,5 +1,6 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
 
 from app.api.v1.endpoints.health import router as health_router
 from app.api.v1.router import api_router
@@ -18,6 +19,11 @@ def create_app() -> FastAPI:
     )
     fastapi_app.include_router(health_router)
     fastapi_app.include_router(api_router)
+    fastapi_app.mount(
+        settings.media_public_prefix,
+        StaticFiles(directory=settings.media_root, check_dir=False),
+        name="media",
+    )
     return fastapi_app
 
 

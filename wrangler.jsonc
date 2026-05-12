@@ -4,7 +4,16 @@
   "main": "worker.py",
   "compatibility_date": "2026-05-11",
   "compatibility_flags": ["python_workers"],
+  "triggers": {
+    "crons": ["* * * * *"]
+  },
   "vars": {
-    "ALLOWED_ORIGINS": "http://localhost:4321,https://nsy-station.pages.dev"
+    "ALLOWED_ORIGINS": "http://localhost:4321,https://nsy-station.pages.dev",
+    "DATA_CACHE_ENABLED": "false",
+    "D1_BINDING": "DB",
+    "TRANSLATION_PROVIDER": "none",
+    "SCHEDULER_ENABLED": "true",
+    "SNS_SYNC_INTERVAL_MINUTES": "10",
+    "EVENT_SYNC_INTERVAL_MINUTES": "60"
   }
 }
