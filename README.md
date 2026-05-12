@@ -1,6 +1,6 @@
 # nsy 情报站
 
-面向日本女声优信息聚合的 Cloudflare Workers 项目。当前采用后端优先结构：仓库根目录是 Python Workers + FastAPI API，前端 Astro + React + TypeScript + Tailwind CSS 应用放在 `web/`。
+面向日本女声优信息聚合的项目。当前保留 Cloudflare Workers 结构，同时补充了更直接的容器化部署方式：后端用 Python + FastAPI，前端用 Astro + React + TypeScript + Tailwind CSS 的 Node 运行时版本。
 
 ## 功能
 
@@ -142,6 +142,65 @@ API 支持 `cache=true|false` 请求级覆盖，便于调试 live fetch 和缓�
 这样做的原因是 Cloudflare Cron 的最小粒度是 1 分钟，而业务间隔需要可配置。Worker 每分钟被唤起一次，再根据上次执行时间决定这次是否真正抓取。
 
 定时抓取使用和缓存相同的持久化 schema，新增 `job_runs` 表记录每类任务的上次执行时间。上线时建议配合 D1 使用；否则 Worker 侧的本地文件存储不具备可靠持久性。
+
+## Docker Compose 部署
+
+默认提供四个服务：
+
+- `api`：FastAPI 后端，监听 `8787`
+- `web`：Astro Node 前端，监听 `4321`
+- `scheduler-sns`：每 10 分钟同步一次 SNS
+- `scheduler-event`：每 1 小时同步一次 event
+
+前端容器会把 `/api/*` 和 `/media/*` 反向代理到后端容器，因此浏览器侧不需要知道容器内网地址。
+
+首次启动：
+
+```bash
+docker compose up --build -d
+```
+
+查看日志：
+
+```bash
+docker compose logs -f api
+docker compose logs -f web
+```
+
+默认访问地址：
+
+- 前端：`http://localhost:4321`
+- 后端：`http://localhost:8787`
+
+可选环境变量：
+
+- `SNS_SYNC_INTERVAL_SECONDS=600`
+- `EVENT_SYNC_INTERVAL_SECONDS=3600`
+
+镜像构建文件：
+
+- 后端：[Dockerfile](/Users/bytedance/Dev/workspace/seiyuu-info/Dockerfile)
+- 前端：[web/Dockerfile](/Users/bytedance/Dev/workspace/seiyuu-info/web/Dockerfile)
+- 编排示例：[docker-compose.yaml](/Users/bytedance/Dev/workspace/seiyuu-info/docker-compose.yaml)
+
+## GitHub Release 镜像
+
+已新增 workflow：[release-images.yml](/Users/bytedance/Dev/workspace/seiyuu-info/.github/workflows/release-images.yml)
+
+触发方式：
+
+- 在 GitHub 创建一个 `Release`
+
+发布结果：
+
+- `ghcr.io/<github-owner>/seiyuu-info-api`
+- `ghcr.io/<github-owner>/seiyuu-info-web`
+
+标签策略：
+
+- `latest`
+- Git tag
+- commit SHA
 
 ## Cloudflare 部署
 

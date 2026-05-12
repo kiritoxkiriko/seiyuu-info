@@ -1,0 +1,80 @@
+services:
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    env_file:
+      - .env
+    environment:
+      ALLOWED_ORIGINS: ${ALLOWED_ORIGINS:-http://localhost:4321}
+      DATA_CACHE_ENABLED: ${DATA_CACHE_ENABLED:-true}
+      DATABASE_URL: ${DATABASE_URL:-sqlite:///data/nsy.sqlite3}
+      MEDIA_ROOT: ${MEDIA_ROOT:-data/media}
+      MEDIA_PUBLIC_PREFIX: ${MEDIA_PUBLIC_PREFIX:-/media}
+    volumes:
+      - ./data:/app/data
+    ports:
+      - "8787:8787"
+    restart: unless-stopped
+
+  web:
+    build:
+      context: ./web
+      dockerfile: Dockerfile
+    environment:
+      HOST: 0.0.0.0
+      PORT: 4321
+      INTERNAL_API_BASE_URL: http://api:8787
+    depends_on:
+      - api
+    ports:
+      - "4321:4321"
+    restart: unless-stopped
+
+  scheduler-sns:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    env_file:
+      - .env
+    environment:
+      DATA_CACHE_ENABLED: ${DATA_CACHE_ENABLED:-true}
+      DATABASE_URL: ${DATABASE_URL:-sqlite:///data/nsy.sqlite3}
+      MEDIA_ROOT: ${MEDIA_ROOT:-data/media}
+      MEDIA_PUBLIC_PREFIX: ${MEDIA_PUBLIC_PREFIX:-/media}
+      SYNC_INTERVAL_SECONDS: ${SNS_SYNC_INTERVAL_SECONDS:-600}
+    command:
+      - sh
+      - -lc
+      - |
+        while true; do
+          python scripts/sync_data.py --no-events
+          sleep "$${SYNC_INTERVAL_SECONDS}"
+        done
+    volumes:
+      - ./data:/app/data
+    restart: unless-stopped
+
+  scheduler-event:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    env_file:
+      - .env
+    environment:
+      DATA_CACHE_ENABLED: ${DATA_CACHE_ENABLED:-true}
+      DATABASE_URL: ${DATABASE_URL:-sqlite:///data/nsy.sqlite3}
+      MEDIA_ROOT: ${MEDIA_ROOT:-data/media}
+      MEDIA_PUBLIC_PREFIX: ${MEDIA_PUBLIC_PREFIX:-/media}
+      SYNC_INTERVAL_SECONDS: ${EVENT_SYNC_INTERVAL_SECONDS:-3600}
+    command:
+      - sh
+      - -lc
+      - |
+        while true; do
+          python scripts/sync_data.py --no-sns
+          sleep "$${SYNC_INTERVAL_SECONDS}"
+        done
+    volumes:
+      - ./data:/app/data
+    restart: unless-stopped
