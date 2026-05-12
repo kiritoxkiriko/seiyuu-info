@@ -1,4 +1,4 @@
-import type { Actor, ActorDetail, EventItem, SnsPost } from "../types";
+import type { Actor, ActorDetail, EventItem, Language, SnsPost } from "../types";
 
 const API_BASE_URL = import.meta.env.PUBLIC_API_BASE_URL ?? "";
 
@@ -30,7 +30,10 @@ export const fallbackActors: Actor[] = [
       { title: "僕の心のヤバいやつ", character: "山田杏奈" },
       { title: "BanG Dream! It's MyGO!!!!!", character: "高松燈" },
     ],
-    socialLinks: [{ platform: "website", label: "青二プロフィール", url: "https://www.aoni.co.jp/search/yomiya-hina.html" }],
+    socialLinks: [
+      { platform: "x", label: "X", url: "https://x.com/Hina_Youmiya" },
+      { platform: "website", label: "青二プロフィール", url: "https://www.aoni.co.jp/search/yomiya-hina.html" },
+    ],
   },
   {
     id: "aoki-hina",
@@ -73,6 +76,7 @@ export const fallbackEvents: EventItem[] = [
     venue: "文化放送",
     url: "https://www.aoni.co.jp/search/yomiya-hina.html",
     source: "seed",
+    language: "original",
   },
   {
     id: "hibiki-style-omon-2026",
@@ -83,6 +87,7 @@ export const fallbackEvents: EventItem[] = [
     venue: "Online",
     url: "https://hibikifan.com/aoki_hina",
     source: "seed",
+    language: "original",
   },
 ];
 
@@ -93,19 +98,23 @@ export const fallbackSns: SnsPost[] = [
     platform: "x",
     postedAt: "2026-05-07T10:00:00+09:00",
     text: "HiBiKi StYle+ 関連のお知らせを公開しました。",
+    detailText: "HiBiKi StYle+ 関連のお知らせを公開しました。",
     url: "https://x.com/aoki__hina",
     kind: "original",
     mediaUrls: [],
+    language: "original",
   },
   {
-    id: "yomiya-web-1",
+    id: "yomiya-x-1",
     actorId: "yomiya-hina",
-    platform: "website",
+    platform: "x",
     postedAt: "2026-04-11T09:00:00+09:00",
-    text: "青二プロダクション公式プロフィールを更新。",
-    url: "https://www.aoni.co.jp/search/yomiya-hina.html",
+    text: "出演信息与近况更新。",
+    detailText: "出演信息与近况更新。活动详情请结合置顶推文和官网一起查看。",
+    url: "https://x.com/Hina_Youmiya",
     kind: "original",
     mediaUrls: [],
+    language: "original",
   },
 ];
 
@@ -121,8 +130,8 @@ export async function fetchActors(): Promise<Actor[]> {
   return getJson<Actor[]>("/api/v1/actors").catch(() => fallbackActors);
 }
 
-export async function fetchActorDetail(actorId: string): Promise<ActorDetail> {
-  return getJson<ActorDetail>(`/api/v1/actors/${actorId}`).catch(() => ({
+export async function fetchActorDetail(actorId: string, language: Language): Promise<ActorDetail> {
+  return getJson<ActorDetail>(`/api/v1/actors/${actorId}?event_source=eventernote&sns_source=x&language=${language}&cache=true`).catch(() => ({
     actor: fallbackActors.find((actor) => actor.id === actorId) ?? fallbackActors[0],
     events: fallbackEvents.filter((event) => event.actorId === actorId),
     sns: fallbackSns.filter((post) => post.actorId === actorId),

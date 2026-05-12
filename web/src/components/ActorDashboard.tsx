@@ -2,8 +2,8 @@ import { Activity, Sparkles } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 
 import { fetchActorDetail, fetchActors } from "../lib/api";
-import type { Actor, ActorDetail, EventCategory } from "../types";
-import { ActorTabs, EventsPanel, Hero, ProfileSummary, SnsPanel } from "./ActorSections";
+import type { Actor, ActorDetail, EventCategory, Language } from "../types";
+import { ActorTabs, EventsPanel, Hero, LanguageSwitch, ProfileSummary, SnsPanel } from "./ActorSections";
 
 export default function ActorDashboard() {
   const [actors, setActors] = useState<Actor[]>([]);
@@ -11,6 +11,7 @@ export default function ActorDashboard() {
   const [detail, setDetail] = useState<ActorDetail | null>(null);
   const [category, setCategory] = useState<EventCategory | "all">("all");
   const [query, setQuery] = useState("");
+  const [language, setLanguage] = useState<Language>("original");
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -25,10 +26,10 @@ export default function ActorDashboard() {
       return;
     }
     setLoading(true);
-    fetchActorDetail(activeId)
+    fetchActorDetail(activeId, language)
       .then(setDetail)
       .finally(() => setLoading(false));
-  }, [activeId]);
+  }, [activeId, language]);
 
   const filteredEvents = useMemo(() => {
     const events = detail?.events ?? [];
@@ -53,6 +54,7 @@ export default function ActorDashboard() {
         {actor ? (
           <div className="space-y-6">
             <Hero actor={actor} loading={loading} />
+            <LanguageSwitch language={language} onChange={setLanguage} />
             <div className="grid gap-6 xl:grid-cols-[minmax(0,1.08fr)_minmax(360px,0.92fr)]">
               <EventsPanel
                 events={filteredEvents}

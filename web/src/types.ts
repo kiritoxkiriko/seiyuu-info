@@ -1,5 +1,6 @@
 export type Platform = "x" | "instagram" | "youtube" | "website";
 export type EventCategory = "live" | "stage" | "talk" | "release" | "broadcast" | "other";
+export type Language = "original" | "zh";
 
 export interface Photo {
   url: string;
@@ -40,11 +41,14 @@ export interface EventItem {
   id: string;
   actorId: string;
   title: string;
+  titleZh?: string | null;
   date: string;
   category: EventCategory;
   venue?: string | null;
+  venueZh?: string | null;
   url?: string | null;
   source: string;
+  language: Language;
 }
 
 export interface SnsPost {
@@ -53,9 +57,13 @@ export interface SnsPost {
   platform: Platform;
   postedAt: string;
   text: string;
+  textZh?: string | null;
+  detailText?: string | null;
+  detailTextZh?: string | null;
   url: string;
   kind: "original" | "repost" | "reply" | "quote" | "story";
   mediaUrls: string[];
+  language: Language;
 }
 
 export interface ActorDetail {
