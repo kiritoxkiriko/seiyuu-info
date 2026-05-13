@@ -85,6 +85,24 @@ Compose 默认把后端数据目录绑定到宿主机 `./data`，SQLite 数据�
 IMAGE_TAG=v0.1.1
 ```
 
+立即同步一次数据：
+
+```bash
+docker compose exec api python scripts/sync_data.py
+```
+
+只同步 SNS：
+
+```bash
+docker compose exec api python scripts/sync_data.py --no-events
+```
+
+只同步 event：
+
+```bash
+docker compose exec api python scripts/sync_data.py --no-sns
+```
+
 ## 本地开发
 
 后端：
