@@ -4,7 +4,7 @@
 
 ## 功能
 
-- 可配置声优列表，当前包含羊宮妃那、青木陽菜
+- 可配置声优列表，当前维护 9 位声优配置
 - 展示个人资料、公式照和代表角色
 - 展示 Eventernote 活动时间线，支持筛选、搜索、分页和即将开始/已结束状态
 - 展示 X 动态，过滤 repost/reply，支持全部、带图片、仅文字筛选
@@ -170,6 +170,33 @@ Docker Compose 默认会开启 `SCHEDULER_ENABLED=true`。本地 `uvicorn` 开�
 - `sns`：本地 fallback SNS 数据
 
 后端 API 在 `cache=true` 时优先读取 SQLite；库里没有数据或手动同步时，会从 Eventernote 和 X 拉取真实数据并 upsert，避免重复抓取。
+
+新增声优时，日常只改 `data/actors.json`。前端 fallback 数据不是必需项，只有明确需要离线 fallback 时再同步更新 `web/src/lib/api.ts`。
+
+配置步骤：
+
+1. 在 `data/actors.json` 的 `actors` 里追加一个 actor 对象。
+2. `id` 使用小写英文和连字符，例如 `hayashi-coco`。
+3. 填写 `profile_url`、`officialPhoto.url`、`socialLinks` 和 `eventernoteUrl`。
+4. `eventernoteUrl` 建议使用 Eventernote 的演员 events 页面，例如 `https://www.eventernote.com/actors/<name>/<id>/events`。
+5. 如果配置了 X 链接，后端同步会使用 X API 拉取该账号的 original/quote posts。
+6. 配置完成后只做 JSON 校验即可：`.venv/bin/python -m json.tool data/actors.json >/tmp/actors.json.check`。
+7. 部署后执行 `docker compose exec api python scripts/sync_data.py` 立即同步一次。
+
+可直接给 Codex 使用的新增声优提示词：
+
+```text
+请为 nsy 情报站新增女声优配置：<声优名>。
+
+要求：
+- 查询并使用官方或可信来源补全个人资料、公式照、X、Instagram、官网、Eventernote events 链接。
+- 只展示 X SNS，Instagram 可以保留在 socialLinks，但页面不会进入 SNS Feed。
+- actor.id 使用小写英文短横线。
+- roles 填 2-4 个代表角色，title 是作品名，character 是角色名。
+- specialties/hobbies 保留日文原文；bio 使用简体中文，控制在 1-2 句。
+- 只更新 data/actors.json，不要修改 web/src/lib/api.ts、测试或其他文件，除非我明确要求。
+- 完成后只运行 JSON 校验，不需要跑 pytest 或前端 build。
+```
 
 语言通过 `language` 参数切换：
 

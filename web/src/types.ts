@@ -27,6 +27,7 @@ export interface Actor {
   agency: string;
   birthday: string;
   birthplace: string;
+  bio?: string | null;
   profile_url: string;
   officialPhoto: Photo;
   gallery: Photo[];

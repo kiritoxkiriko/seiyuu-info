@@ -8,6 +8,7 @@
       "agency": "青二プロダクション",
       "birthday": "3月26日",
       "birthplace": "奈良県",
+      "bio": "奈良县出身，青二プロダクション所属。特长是舞蹈和关西腔。代表角色包括《我心里危险的东西》山田杏奈、《BanG Dream! It's MyGO!!!!!》高松燈。",
       "profile_url": "https://www.aoni.co.jp/search/yomiya-hina.html",
       "officialPhoto": {
         "url": "https://www.aoni.co.jp/search/items/yomiya-hina.jpg",
@@ -48,6 +49,7 @@
       "agency": "響",
       "birthday": "1月5日",
       "birthplace": "宮城県",
+      "bio": "宫城县出身，響所属。特长是钢琴和歌唱。代表角色包括《BanG Dream! It's MyGO!!!!!》要楽奈、《カードファイト!! ヴァンガード will+Dress Season2》ハロナ・ウォーカー。",
       "profile_url": "https://hibiki-cast.jp/hibiki_f/aoki_hina/",
       "officialPhoto": {
         "url": "https://bm-echoes.com/wordpress/wp-content/uploads/2024/07/17145908/hinaaoki_artistphoto_tate_FIX_resize-e1752732015470.jpg",
@@ -80,6 +82,260 @@
         {"platform": "website", "label": "響プロフィール", "url": "https://hibiki-cast.jp/hibiki_f/aoki_hina/"}
       ],
       "eventernoteUrl": "https://www.eventernote.com/actors/%E9%9D%92%E6%9C%A8%E9%99%BD%E8%8F%9C/59830/events"
+    },
+    {
+      "id": "hayashi-coco",
+      "name": "林鼓子",
+      "kana": "はやし ここ",
+      "romanized": "Coco Hayashi",
+      "agency": "LIBERTE",
+      "birthday": "5月15日",
+      "birthplace": "静岡県",
+      "bio": "静冈县出身，LIBERTE 所属。擅长鼓、打击乐和钢琴。代表角色包括《BanG Dream! It's MyGO!!!!!》椎名立希、《ラブライブ！虹ヶ咲学園スクールアイドル同好会》優木せつ菜。",
+      "profile_url": "https://fan.pia.jp/cocohayashi/",
+      "officialPhoto": {
+        "url": "https://prcdn.freetls.fastly.net/release_image/11710/3628/11710-3628-36d180a62147de4f8907d71ddef456e6-1278x586.jpg?width=536&quality=85%2C75&format=jpeg&auto=webp&fit=bounds&bg-color=fff",
+        "alt": "林鼓子 Official Site / Official Fanclub 画像",
+        "source": "林鼓子 Official Site / PR TIMES"
+      },
+      "gallery": [
+        {
+          "url": "https://prcdn.freetls.fastly.net/release_image/11710/3628/11710-3628-36d180a62147de4f8907d71ddef456e6-1278x586.jpg?width=536&quality=85%2C75&format=jpeg&auto=webp&fit=bounds&bg-color=fff",
+          "alt": "林鼓子 Official Site / Official Fanclub 画像",
+          "source": "林鼓子 Official Site / PR TIMES"
+        }
+      ],
+      "specialties": ["ドラム", "パーカッション全般", "ピアノ"],
+      "hobbies": ["ミュージカル鑑賞", "イラストを描くこと"],
+      "roles": [
+        {"title": "BanG Dream! It's MyGO!!!!!", "character": "椎名立希"},
+        {"title": "ラブライブ！虹ヶ咲学園スクールアイドル同好会", "character": "優木せつ菜 / 中川菜々"},
+        {"title": "キラッとプリ☆チャン", "character": "桃山みらい"}
+      ],
+      "socialLinks": [
+        {"platform": "x", "label": "X", "url": "https://x.com/cocohayashi515"},
+        {"platform": "instagram", "label": "Instagram", "url": "https://www.instagram.com/coco_hayashi.official/"},
+        {"platform": "website", "label": "Official Site", "url": "https://fan.pia.jp/cocohayashi/"}
+      ],
+      "eventernoteUrl": "https://www.eventernote.com/actors/%E6%9E%97%E9%BC%93%E5%AD%90/30284/events"
+    },
+    {
+      "id": "rina-togetoge",
+      "name": "理名",
+      "kana": "りな",
+      "romanized": "Rina",
+      "agency": "トゲナシトゲアリ / agehasprings",
+      "birthday": "11月13日",
+      "birthplace": "広島県",
+      "bio": "广岛县出身，トゲナシトゲアリ Vo.。在《ガールズバンドクライ》中担任井芹仁菜役，同时作为乐队主唱展开音乐活动。",
+      "profile_url": "https://www.universal-music.co.jp/togenashitogeari/biography/",
+      "officialPhoto": {
+        "url": "https://www.universal-music.co.jp/togenashitogeari/wp-content/uploads/sites/3991/2023/07/rina_main-683x1024.jpg",
+        "alt": "理名 アーティスト写真",
+        "source": "UNIVERSAL MUSIC JAPAN"
+      },
+      "gallery": [
+        {
+          "url": "https://www.universal-music.co.jp/togenashitogeari/wp-content/uploads/sites/3991/2023/07/rina_main-683x1024.jpg",
+          "alt": "理名 アーティスト写真",
+          "source": "UNIVERSAL MUSIC JAPAN"
+        }
+      ],
+      "specialties": ["睡眠"],
+      "hobbies": ["絵を描くこと"],
+      "roles": [
+        {"title": "ガールズバンドクライ", "character": "井芹仁菜"}
+      ],
+      "socialLinks": [
+        {"platform": "x", "label": "X", "url": "https://x.com/rina_togetoge"},
+        {"platform": "instagram", "label": "Instagram", "url": "https://www.instagram.com/rina_togetoge/"},
+        {"platform": "website", "label": "トゲナシトゲアリ Biography", "url": "https://www.universal-music.co.jp/togenashitogeari/biography/"}
+      ],
+      "eventernoteUrl": "https://www.eventernote.com/actors/%E7%90%86%E5%90%8D/73862/events"
+    },
+    {
+      "id": "kusunoki-tomori",
+      "name": "楠木ともり",
+      "kana": "くすのき ともり",
+      "romanized": "Tomori Kusunoki",
+      "agency": "Sony Music Artists",
+      "birthday": "12月22日",
+      "birthplace": "東京都",
+      "bio": "东京都出身，Sony Music Artists 所属。声优兼创作歌手。代表角色包括《チェンソーマン》マキマ、《ソードアート・オンライン オルタナティブ ガンゲイル・オンライン》レン、《プロジェクトセカイ》宵崎奏。",
+      "profile_url": "https://www.sma.co.jp/s/sma/artist/441",
+      "officialPhoto": {
+        "url": "https://www.sma.co.jp/s/sma/artist_photo/441",
+        "alt": "楠木ともり 公式プロフィール写真",
+        "source": "Sony Music Artists"
+      },
+      "gallery": [
+        {
+          "url": "https://www.sma.co.jp/s/sma/artist_photo/441",
+          "alt": "楠木ともり 公式プロフィール写真",
+          "source": "Sony Music Artists"
+        }
+      ],
+      "specialties": ["絵を描くこと", "トランペット"],
+      "hobbies": ["作詞・作曲", "音楽を弾く、聴くこと", "画材屋さんめぐり", "ゲーム", "ネットサーフィン"],
+      "roles": [
+        {"title": "チェンソーマン", "character": "マキマ"},
+        {"title": "ソードアート・オンライン オルタナティブ ガンゲイル・オンライン", "character": "レン / 小比類巻香蓮"},
+        {"title": "プロジェクトセカイ カラフルステージ! feat. 初音ミク", "character": "宵崎奏"},
+        {"title": "ヘブンバーンズレッド", "character": "茅森月歌"}
+      ],
+      "socialLinks": [
+        {"platform": "x", "label": "X", "url": "https://x.com/tomori_kusunoki"},
+        {"platform": "website", "label": "Official Website", "url": "https://www.kusunokitomori.com/"},
+        {"platform": "website", "label": "SMA Profile", "url": "https://www.sma.co.jp/s/sma/artist/441"}
+      ],
+      "eventernoteUrl": "https://www.eventernote.com/actors/%E6%A5%A0%E6%9C%A8%E3%81%A8%E3%82%82%E3%82%8A/27163/events"
+    },
+    {
+      "id": "takeuchi-yume",
+      "name": "竹内夢",
+      "kana": "たけうち ゆめ",
+      "romanized": "Yume Takeuchi",
+      "agency": "TACHI PRO",
+      "birthday": "10月15日",
+      "birthplace": "北海道札幌市",
+      "bio": "北海道札幌市出身，TACHI PRO 所属。演员、歌手，也参与声优活动。代表角色包括《少女☆歌劇 レヴュースタァライト》リュウ・メイファン、《ウタヒメドリーム》SUKURAKO。",
+      "profile_url": "https://tachipro.jp/members/",
+      "officialPhoto": {
+        "url": "https://prcdn.freetls.fastly.net/release_image/17372/1585/17372-1585-760af1ce970c1c4c07f0ba55d4074307-1200x630.jpg",
+        "alt": "竹内夢 オフィシャルファンクラブ画像",
+        "source": "PR TIMES / 竹内夢オフィシャルファンクラブ"
+      },
+      "gallery": [
+        {
+          "url": "https://prcdn.freetls.fastly.net/release_image/17372/1585/17372-1585-760af1ce970c1c4c07f0ba55d4074307-1200x630.jpg",
+          "alt": "竹内夢 オフィシャルファンクラブ画像",
+          "source": "PR TIMES / 竹内夢オフィシャルファンクラブ"
+        }
+      ],
+      "specialties": ["ギター", "歌"],
+      "hobbies": ["スノーボード", "バスケットボール", "ギター"],
+      "roles": [
+        {"title": "少女☆歌劇 レヴュースタァライト", "character": "リュウ・メイファン"},
+        {"title": "ウタヒメドリーム", "character": "SUKURAKO"},
+        {"title": "おとうさんといっしょ", "character": "ゆめ"}
+      ],
+      "socialLinks": [
+        {"platform": "x", "label": "X", "url": "https://x.com/takeuchiyume"},
+        {"platform": "instagram", "label": "Instagram", "url": "https://www.instagram.com/yume_takeuchi_ta/"},
+        {"platform": "website", "label": "Official Fanclub", "url": "https://takeuchiyume.net/"},
+        {"platform": "website", "label": "TACHI PRO", "url": "https://tachipro.jp/members/"}
+      ],
+      "eventernoteUrl": "https://www.eventernote.com/actors/%E7%AB%B9%E5%86%85%E5%A4%A2/16000/events"
+    },
+    {
+      "id": "tomita-miyu",
+      "name": "富田美憂",
+      "kana": "とみた みゆ",
+      "romanized": "Miyu Tomita",
+      "agency": "アミューズクリエイティブスタジオ",
+      "birthday": "11月15日",
+      "birthplace": "埼玉県",
+      "bio": "埼玉県出身，アミューズクリエイティブスタジオ所属。声优兼歌手。代表角色包括《アイカツスターズ!》虹野ゆめ、《メイドインアビス》リコ、《機動戦士ガンダム 水星の魔女》チュアチュリー・パンランチ。",
+      "profile_url": "https://www.amuse.co.jp/artist/A8701/",
+      "officialPhoto": {
+        "url": "https://www.amuse.co.jp/artist/A8701/assets/images/artist_photo.jpg",
+        "alt": "富田美憂 公式プロフィール写真",
+        "source": "アミューズ"
+      },
+      "gallery": [
+        {
+          "url": "https://www.amuse.co.jp/artist/A8701/assets/images/artist_photo.jpg",
+          "alt": "富田美憂 公式プロフィール写真",
+          "source": "アミューズ"
+        }
+      ],
+      "specialties": ["イラストを描くこと", "空手", "歌"],
+      "hobbies": ["音楽鑑賞", "映画鑑賞", "読書"],
+      "roles": [
+        {"title": "アイカツスターズ!", "character": "虹野ゆめ"},
+        {"title": "メイドインアビス", "character": "リコ"},
+        {"title": "機動戦士ガンダム 水星の魔女", "character": "チュアチュリー・パンランチ"},
+        {"title": "かぐや様は告らせたい", "character": "伊井野ミコ"}
+      ],
+      "socialLinks": [
+        {"platform": "x", "label": "X", "url": "https://x.com/miyju_tomita"},
+        {"platform": "website", "label": "Amuse Profile", "url": "https://www.amuse.co.jp/artist/A8701/"},
+        {"platform": "website", "label": "Columbia Profile", "url": "https://columbia.jp/artist-info/tomitamiyu/prof.html"}
+      ],
+      "eventernoteUrl": "https://www.eventernote.com/actors/%E5%AF%8C%E7%94%B0%E7%BE%8E%E6%86%82/16655/events"
+    },
+    {
+      "id": "nakashima-yuki",
+      "name": "中島由貴",
+      "kana": "なかしま ゆき",
+      "romanized": "Yuki Nakashima",
+      "agency": "Beffect",
+      "birthday": "9月12日",
+      "birthplace": "和歌山県",
+      "bio": "和歌山県出身，Beffect 所属。声优、歌手，也作为 Roselia 贝斯手活动。代表角色包括《BanG Dream!》今井リサ、《プロジェクトセカイ》日野森志歩、《アイドルマスター シンデレラガールズ》乙倉悠貴。",
+      "profile_url": "https://www.beffect.co.jp/talent/yuki/",
+      "officialPhoto": {
+        "url": "https://www.beffect.co.jp/wp/wp-content/uploads/2020/06/yuki-1.jpg",
+        "alt": "中島由貴 公式プロフィール写真",
+        "source": "Beffect"
+      },
+      "gallery": [
+        {
+          "url": "https://www.beffect.co.jp/wp/wp-content/uploads/2020/06/yuki-1.jpg",
+          "alt": "中島由貴 公式プロフィール写真",
+          "source": "Beffect"
+        }
+      ],
+      "specialties": ["ベース", "音楽ゲーム"],
+      "hobbies": ["ゲームプレイ", "散歩", "歌って踊ること"],
+      "roles": [
+        {"title": "BanG Dream!", "character": "今井リサ"},
+        {"title": "プロジェクトセカイ カラフルステージ! feat. 初音ミク", "character": "日野森志歩"},
+        {"title": "アイドルマスター シンデレラガールズ", "character": "乙倉悠貴"},
+        {"title": "遊☆戯☆王VRAINS", "character": "財前葵 / ブルーエンジェル"}
+      ],
+      "socialLinks": [
+        {"platform": "x", "label": "X", "url": "https://x.com/Yuki_Nakashim"},
+        {"platform": "instagram", "label": "Instagram", "url": "https://www.instagram.com/nakashima_yuki.official/"},
+        {"platform": "website", "label": "Beffect Profile", "url": "https://www.beffect.co.jp/talent/yuki/"}
+      ],
+      "eventernoteUrl": "https://www.eventernote.com/actors/%E4%B8%AD%E5%B3%B6%E7%94%B1%E8%B2%B4/12491/events"
+    },
+    {
+      "id": "yamane-aya",
+      "name": "山根綺",
+      "kana": "やまね あや",
+      "romanized": "Aya Yamane",
+      "agency": "青二プロダクション",
+      "birthday": "2月4日",
+      "birthplace": "神奈川県",
+      "bio": "神奈川県出身，青二プロダクション所属。声优、歌手。代表角色包括《機動戦士ガンダム 水星の魔女》セセリア・ドート、《アイドルマスター シャイニーカラーズ》緋田美琴、《るろうに剣心 -明治剣客浪漫譚-》巻町操。",
+      "profile_url": "https://www.aoni.co.jp/search/yamane-aya.html",
+      "officialPhoto": {
+        "url": "https://www.aoni.co.jp/search/items/yamane-aya.jpg",
+        "alt": "山根綺 公式プロフィール写真",
+        "source": "青二プロダクション"
+      },
+      "gallery": [
+        {
+          "url": "https://www.aoni.co.jp/search/items/yamane-aya.jpg",
+          "alt": "山根綺 公式プロフィール写真",
+          "source": "青二プロダクション"
+        }
+      ],
+      "specialties": ["ダンス"],
+      "hobbies": ["麻雀", "ギター", "料理", "ヒューマンドラマ観賞"],
+      "roles": [
+        {"title": "機動戦士ガンダム 水星の魔女", "character": "セセリア・ドート"},
+        {"title": "アイドルマスター シャイニーカラーズ", "character": "緋田美琴"},
+        {"title": "るろうに剣心 -明治剣客浪漫譚-", "character": "巻町操"},
+        {"title": "ウマ娘 プリティーダービー", "character": "ダイタクヘリオス"}
+      ],
+      "socialLinks": [
+        {"platform": "x", "label": "X", "url": "https://x.com/ayaMiNTgreen"},
+        {"platform": "website", "label": "青二プロフィール", "url": "https://www.aoni.co.jp/search/yamane-aya.html"}
+      ],
+      "eventernoteUrl": "https://www.eventernote.com/actors/%E5%B1%B1%E6%A0%B9%E7%B6%BA/36550/events"
     }
   ],
   "events": [

@@ -16,7 +16,7 @@ def test_list_actors_contains_configured_names():
     response = client.get("/api/v1/actors")
     assert response.status_code == 200
     names = {actor["name"] for actor in response.json()}
-    assert {"羊宮妃那", "青木陽菜"} == names
+    assert {"羊宮妃那", "青木陽菜", "林鼓子", "理名", "楠木ともり"}.issubset(names)
 
 
 def test_actor_detail_includes_events_and_sns():

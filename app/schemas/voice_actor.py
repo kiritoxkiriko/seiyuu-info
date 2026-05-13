@@ -39,6 +39,7 @@ class Actor(BaseModel):
     agency: str
     birthday: str
     birthplace: str
+    bio: str | None = None
     profile_url: HttpUrl
     official_photo: Photo = Field(alias="officialPhoto")
     gallery: list[Photo]

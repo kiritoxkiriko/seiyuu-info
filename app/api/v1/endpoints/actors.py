@@ -28,10 +28,6 @@ router = APIRouter()
 @router.get("/actors", response_model=list[Actor])
 async def actors(request: Request, cache: bool | None = None) -> list[Actor]:
     store = await _store(cache, request)
-    if store:
-        cached = await store.list_actors()
-        if cached:
-            return cached
     configured = list_actors()
     if store:
         await store.upsert_actors(configured)
@@ -180,12 +176,14 @@ async def _sns_for_actor(
 
 
 async def _get_actor(actor_id: str, store: CacheStore | None) -> Actor | None:
-    actor = await store.get_actor(actor_id) if store else None
-    if actor:
-        return actor
     actor = get_actor(actor_id)
     if actor and store:
         await store.upsert_actor(actor)
+    if actor:
+        return actor
+    actor = await store.get_actor(actor_id) if store else None
+    if actor:
+        return actor
     return actor
 
 
