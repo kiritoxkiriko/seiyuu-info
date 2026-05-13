@@ -1,40 +1,78 @@
 # nsy 情报站
 
-面向日本女声优信息聚合的项目。当前保留 Cloudflare Workers 结构，同时补充了更直接的容器化部署方式：后端用 Python + FastAPI，前端用 Astro + React + TypeScript + Tailwind CSS 的 Node 运行时版本。
+面向日本女声优信息聚合的站点。后端使用 FastAPI 抓取、缓存和提供 API，前端使用 Astro + React + TypeScript + Tailwind CSS 渲染页面。当前默认部署方式是 Docker Compose：一个后端容器、一个前端容器，定时同步运行在后端进程内。
 
 ## 功能
 
 - 可配置声优列表，当前包含羊宮妃那、青木陽菜
-- 展示个人信息、公式/艺人照和代表角色
-- 展示 event 时间线，支持类别筛选、关键词搜索和分页
-- 展示 X/SNS 动态，后端默认过滤 X repost/reply 和 Instagram 展示，仅返回 original/quote
-- SNS 列表支持分页；单条动态默认折叠长文和图片，展开后查看全文与大图
-- Eventernote event 和 X posts 支持独立的抓取/显示时间窗、落库缓存和原文/中文切换
-- Cloudflare Cron 定时抓取：默认每 10 分钟同步 SNS、每 1 小时同步 event
-- 图片存储保留 provider 边界，当前实现本地 `/media` 静态文件
+- 展示个人资料、公式照和代表角色
+- 展示 Eventernote 活动时间线，支持筛选、搜索、分页和即将开始/已结束状态
+- 展示 X 动态，过滤 repost/reply，支持全部、带图片、仅文字筛选
+- 推文默认折叠长文和图片，展开后查看全文、大图和高清下载
+- event 和 SNS 支持独立抓取/展示时间窗、SQLite 落库缓存、原文/中文切换
+- 后端进程内定时同步，默认每 10 分钟同步 SNS、每 1 小时同步 event
+- 图片存储保留 provider 抽象，当前实现本地 `/media`
 
 ## 项目结构
 
 ```text
 .
-├── app/                    # 标准 FastAPI 应用包
-│   ├── api/v1/endpoints/   # API v1 路由实现
-│   ├── core/               # 配置与核心工具
-│   ├── schemas/            # Pydantic 请求/响应模型
-│   ├── services/           # 数据仓库、缓存、Eventernote、SNS provider
+├── app/                    # FastAPI 应用
+│   ├── api/v1/endpoints/   # API 路由
+│   ├── core/               # 配置
+│   ├── schemas/            # Pydantic 模型
+│   ├── services/           # 数据库、抓取、翻译、存储、调度
 │   └── main.py             # FastAPI app factory
-├── data/actors.json        # 声优、活动、SNS 配置数据
-├── migrations/             # SQLite/D1 兼容 schema
-├── scripts/sync_data.py    # 抓取并落库脚本
-├── tests/                  # 后端 API 测试
-├── worker.py               # Cloudflare Python Workers ASGI 入口
-├── pyproject.toml          # 后端依赖与 pytest 配置
-├── wrangler.jsonc          # 后端 Worker 配置
-└── web/                    # Astro 前端 Worker 项目
-    ├── src/                # 前端源码
-    ├── wrangler.jsonc      # 前端 Worker 配置
-    └── package.json        # 前端脚本
+├── data/actors.json        # 声优配置
+├── migrations/             # SQLite schema
+├── scripts/sync_data.py    # 手动同步脚本
+├── tests/                  # 后端测试
+├── web/                    # Astro 前端
+├── Dockerfile              # 后端镜像
+├── web/Dockerfile          # 前端镜像
+└── docker-compose.yaml     # 本地/服务器部署编排
 ```
+
+## 快速部署
+
+准备环境变量。可以从 `.env.example` 复制一份：
+
+```bash
+cp .env.example .env
+```
+
+真实 X 数据需要配置：
+
+```bash
+X_BEARER_TOKEN=...
+```
+
+如需中文翻译，再配置：
+
+```bash
+TRANSLATION_PROVIDER=deepl
+DEEPL_API_KEY=...
+```
+
+启动：
+
+```bash
+docker compose up --build -d
+```
+
+访问：
+
+- 前端：`http://localhost:4321`
+- 后端：`http://localhost:8787`
+
+查看日志：
+
+```bash
+docker compose logs -f api
+docker compose logs -f web
+```
+
+Compose 默认把后端数据目录绑定到宿主机 `./data`，SQLite 数据库位于 `./data/nsy.sqlite3`，图片位于 `./data/media`。
 
 ## 本地开发
 
@@ -56,43 +94,53 @@ npm install
 PUBLIC_API_BASE_URL=http://localhost:8787 npm run dev
 ```
 
-前端默认通过 `PUBLIC_API_BASE_URL=http://localhost:8787` 访问后端，API 路径为 `/api/v1/*`。后端没启动时，前端会使用内置 fallback 数据，方便先看页面。
-
-初始化/刷新本地缓存库：
+手动同步数据：
 
 ```bash
 set -a
 source .env
 set +a
-.venv/bin/python scripts/sync_data.py
+uv run python scripts/sync_data.py
 ```
 
-如果要在本地验证 Cloudflare 的 `scheduled()` 行为，需要用 Worker runtime 而不是 `uvicorn`。官方 Python Workers 会暴露一个测试路由：
+运行测试：
 
 ```bash
-uv run pywrangler dev --test-scheduled
-curl "http://localhost:8787/cdn-cgi/handler/scheduled?cron=*+*+*+*+*"
+uv run pytest
+cd web
+ASTRO_ADAPTER=node ASTRO_TELEMETRY_DISABLED=1 npm run build
 ```
 
-## 配置声优
+## 配置
 
-编辑 `data/actors.json`：
+核心配置都可以通过环境变量覆盖：
 
-- `actors`：基础资料、公式照、照片墙、SNS 链接、Eventernote 搜索 URL
-- `events`：时间线数据，`category` 可选 `live`、`stage`、`talk`、`release`、`broadcast`、`other`
-- `sns`：动态数据，`kind` 为 `repost` 或 `reply` 时不会展示
+- `ALLOWED_ORIGINS=http://localhost:4321`：后端 CORS origin
+- `DATA_CACHE_ENABLED=true`：开启 API 缓存读写
+- `DATABASE_URL=sqlite:///data/nsy.sqlite3`：SQLite 数据库路径
+- `EVENT_FETCH_PAST_DAYS=183` / `EVENT_FETCH_FUTURE_DAYS=183`：event 抓取窗口
+- `SNS_FETCH_PAST_DAYS=183`：推文抓取窗口
+- `EVENT_DISPLAY_PAST_DAYS=183` / `EVENT_DISPLAY_FUTURE_DAYS=183`：event 展示窗口
+- `SNS_DISPLAY_PAST_DAYS=183`：SNS 展示窗口
+- `SCHEDULER_ENABLED=true`：是否启用后端进程内定时同步
+- `SNS_SYNC_INTERVAL_MINUTES=10`：SNS 同步间隔
+- `EVENT_SYNC_INTERVAL_MINUTES=60`：event 同步间隔
+- `MEDIA_ROOT=data/media` / `MEDIA_PUBLIC_PREFIX=/media`：本地图片存储路径和访问前缀
+- `X_BEARER_TOKEN=...`：X API v2 Bearer Token
+- `TRANSLATION_PROVIDER=none|deepl`：翻译 provider
+- `DEEPL_API_KEY=...`：DeepL API Key
 
-## 真实数据源
+Docker Compose 默认会开启 `SCHEDULER_ENABLED=true`。本地 `uvicorn` 开发时可以按需关闭，避免频繁抓取真实数据。
 
-Event 默认按时间倒序返回，并限制在配置的显示窗口内。可通过 Eventernote 公开页面拉取真实 event：
+## 数据源
 
-```bash
-curl "http://localhost:8787/api/v1/events?actor_id=yomiya-hina&source=eventernote&cache=true"
-```
+声优基础信息配置在 `data/actors.json`：
 
-前端详情请求默认会带 `event_source=eventernote&sns_source=x&cache=true`。开启缓存时后端优先读库；库里没有数据时才抓取并 upsert，避免重复抓取。
+- `actors`：个人资料、公式照、SNS 链接、Eventernote 搜索 URL
+- `events`：本地 fallback event 数据
+- `sns`：本地 fallback SNS 数据
 
-SNS 默认按 `postedAt` 倒序返回，并限制在配置的显示窗口内。X 使用 API v2 user posts timeline，通过 `exclude=retweets,replies` 过滤转发和回复；Instagram 不再进入 SNS 展示。
+后端 API 在 `cache=true` 时优先读取 SQLite；库里没有数据或手动同步时，会从 Eventernote 和 X 拉取真实数据并 upsert，避免重复抓取。
 
 语言通过 `language` 参数切换：
 
@@ -100,186 +148,21 @@ SNS 默认按 `postedAt` 倒序返回，并限制在配置的显示窗口内。X
 curl "http://localhost:8787/api/v1/actors/aoki-hina?event_source=eventernote&sns_source=x&language=zh&cache=true"
 ```
 
-中文字段在抓取/同步时写入库。默认 `TRANSLATION_PROVIDER=none` 会把原文写入中文字段，方便本地无 Key 开发；如需真实翻译，配置 `TRANSLATION_PROVIDER=deepl` 和 `DEEPL_API_KEY` 后重新运行同步脚本。
+默认 `TRANSLATION_PROVIDER=none` 会把原文写入中文字段，方便无 Key 开发；配置 DeepL 后重新同步即可写入真实中文翻译。
 
-环境变量示例见 `.env.example`。
+## 镜像发布
 
-显式调试 X 数据：
+仓库包含 GitHub Actions workflow：
 
-```bash
-set -a
-source .env
-set +a
-uv run uvicorn app.main:app --host localhost --port 8787
-curl "http://localhost:8787/api/v1/sns?actor_id=aoki-hina&source=x&cache=true"
-```
+- `.github/workflows/release-images.yml`
 
-## 数据库与图片存储
-
-本地缓存使用 SQLite，默认路径 `data/nsy.sqlite3`，已被 `.gitignore` 忽略。schema 位于 `migrations/0001_cache.sql`，与 Cloudflare D1 兼容。
-
-相关开关：
-
-- `DATA_CACHE_ENABLED=true`：开启 API 读写缓存
-- `DATABASE_URL=sqlite:///data/nsy.sqlite3`：本地 SQLite
-- `D1_BINDING=DB`：Cloudflare Worker 上的 D1 binding 名称
-- `EVENT_FETCH_PAST_DAYS=183` / `EVENT_FETCH_FUTURE_DAYS=183`：event 抓取与落库窗口
-- `SNS_FETCH_PAST_DAYS=183`：推文抓取与落库窗口
-- `EVENT_DISPLAY_PAST_DAYS=183` / `EVENT_DISPLAY_FUTURE_DAYS=183`：event 接口展示窗口
-- `SNS_DISPLAY_PAST_DAYS=183`：推文接口展示窗口
-- `MEDIA_ROOT=data/media` / `MEDIA_PUBLIC_PREFIX=/media`：本地图片存储目录与访问前缀
-
-API 支持 `cache=true|false` 请求级覆盖，便于调试 live fetch 和缓存读取。
-
-## 定时抓取
-
-部署到 Cloudflare Workers 后，根 Worker 配置了每分钟一次的 Cron Trigger。真正的业务频率不写死在 cron 表达式里，而是由数据库里的 `job_runs` 和下面三个配置共同控制：
-
-- `SCHEDULER_ENABLED=true|false`：是否启用定时抓取
-- `SNS_SYNC_INTERVAL_MINUTES=10`：SNS 抓取间隔，默认 10 分钟
-- `EVENT_SYNC_INTERVAL_MINUTES=60`：event 抓取间隔，默认 1 小时
-
-这样做的原因是 Cloudflare Cron 的最小粒度是 1 分钟，而业务间隔需要可配置。Worker 每分钟被唤起一次，再根据上次执行时间决定这次是否真正抓取。
-
-定时抓取使用和缓存相同的持久化 schema，新增 `job_runs` 表记录每类任务的上次执行时间。上线时建议配合 D1 使用；否则 Worker 侧的本地文件存储不具备可靠持久性。
-
-## Docker Compose 部署
-
-默认提供四个服务：
-
-- `api`：FastAPI 后端，监听 `8787`
-- `web`：Astro Node 前端，监听 `4321`
-- `scheduler-sns`：每 10 分钟同步一次 SNS
-- `scheduler-event`：每 1 小时同步一次 event
-
-前端容器会把 `/api/*` 和 `/media/*` 反向代理到后端容器，因此浏览器侧不需要知道容器内网地址。
-
-首次启动：
-
-```bash
-docker compose up --build -d
-```
-
-查看日志：
-
-```bash
-docker compose logs -f api
-docker compose logs -f web
-```
-
-默认访问地址：
-
-- 前端：`http://localhost:4321`
-- 后端：`http://localhost:8787`
-
-可选环境变量：
-
-- `SNS_SYNC_INTERVAL_SECONDS=600`
-- `EVENT_SYNC_INTERVAL_SECONDS=3600`
-
-镜像构建文件：
-
-- 后端：[Dockerfile](/Users/bytedance/Dev/workspace/seiyuu-info/Dockerfile)
-- 前端：[web/Dockerfile](/Users/bytedance/Dev/workspace/seiyuu-info/web/Dockerfile)
-- 编排示例：[docker-compose.yaml](/Users/bytedance/Dev/workspace/seiyuu-info/docker-compose.yaml)
-
-## GitHub Release 镜像
-
-已新增 workflow：[release-images.yml](/Users/bytedance/Dev/workspace/seiyuu-info/.github/workflows/release-images.yml)
-
-触发方式：
-
-- 在 GitHub 创建一个 `Release`
-
-发布结果：
+创建 GitHub Release 后会构建并推送：
 
 - `ghcr.io/<github-owner>/seiyuu-info-api`
 - `ghcr.io/<github-owner>/seiyuu-info-web`
 
-标签策略：
+镜像标签包含：
 
 - `latest`
 - Git tag
 - commit SHA
-
-## Cloudflare 部署
-
-后端 Python Worker：
-
-```bash
-uv run pywrangler deploy
-```
-
-本地开发默认用 `uv run uvicorn`，这样更符合标准 FastAPI 项目习惯。`pywrangler` 只在需要模拟或部署 Cloudflare Python Workers runtime 时使用。
-
-如需在 Worker 上启用落库缓存，创建 D1 并绑定为 `DB`：
-
-```bash
-npx wrangler d1 create nsy-station
-npx wrangler d1 execute nsy-station --file migrations/0001_cache.sql
-```
-
-然后把返回的 D1 信息加入 `wrangler.jsonc`：
-
-```jsonc
-{
-  "d1_databases": [
-    {
-      "binding": "DB",
-      "database_name": "nsy-station",
-      "database_id": "<database-id>"
-    }
-  ],
-  "vars": {
-    "DATA_CACHE_ENABLED": "true",
-    "D1_BINDING": "DB",
-    "SCHEDULER_ENABLED": "true",
-    "SNS_SYNC_INTERVAL_MINUTES": "10",
-    "EVENT_SYNC_INTERVAL_MINUTES": "60"
-  }
-}
-```
-
-生产环境的 `X_BEARER_TOKEN`、`DEEPL_API_KEY` 不要写进 `wrangler.jsonc`，用 Wrangler secret 或 Cloudflare Dashboard 配置：
-
-```bash
-npx wrangler secret put X_BEARER_TOKEN
-npx wrangler secret put DEEPL_API_KEY
-```
-
-前端 Worker：
-
-```bash
-cd web
-npm run build
-npx wrangler deploy
-```
-
-部署后把 `web/wrangler.jsonc` 里的 `PUBLIC_API_BASE_URL` 改成后端 Worker URL，例如：
-
-```jsonc
-{
-  "vars": {
-    "PUBLIC_API_BASE_URL": "https://nsy-station-api.<account>.workers.dev"
-  }
-}
-```
-
-再重新部署前端。
-
-## 验证
-
-```bash
-uv run pytest
-```
-
-```bash
-cd web
-npm run build
-```
-
-## 资料来源
-
-- 羊宮妃那：青二プロダクション公式プロフィール
-- 青木陽菜：響公式プロフィール、BM-ECHOES artist profile
-- Cloudflare Workers 官方文档：Astro on Workers、Python Workers、FastAPI on Python Workers

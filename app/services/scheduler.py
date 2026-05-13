@@ -1,6 +1,8 @@
+import asyncio
 import json
 import os
 from datetime import datetime, timedelta, timezone
+from typing import NoReturn
 
 from app.services.cache_store import CacheStore
 from app.services.sync_pipeline import collect_events, collect_posts
@@ -9,6 +11,25 @@ from app.services.repository import list_actors
 
 EVENT_SYNC_JOB = "event_sync"
 SNS_SYNC_JOB = "sns_sync"
+MIN_SCHEDULER_POLL_SECONDS = 60
+
+
+async def run_scheduler_loop(store: CacheStore, settings) -> NoReturn:
+    poll_seconds = scheduler_poll_seconds(settings)
+    while True:
+        try:
+            await run_scheduled_syncs(store, settings)
+        except Exception as exc:
+            print(f"scheduled sync failed: {exc.__class__.__name__}: {exc}", flush=True)
+        await asyncio.sleep(poll_seconds)
+
+
+def scheduler_poll_seconds(settings) -> int:
+    shortest_interval = min(
+        max(1, settings.sns_sync_interval_minutes),
+        max(1, settings.event_sync_interval_minutes),
+    )
+    return max(MIN_SCHEDULER_POLL_SECONDS, shortest_interval * 60)
 
 
 async def run_scheduled_syncs(store: CacheStore, settings, now: datetime | None = None) -> dict[str, int]:

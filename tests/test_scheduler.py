@@ -5,7 +5,14 @@ from types import SimpleNamespace
 from app.schemas.voice_actor import Actor, Event, SnsPost
 from app.services.cache_store import LocalCacheStore
 from app.services.database import DataStore
-from app.services.scheduler import EVENT_SYNC_JOB, SNS_SYNC_JOB, parse_datetime, run_scheduled_syncs, should_run_job
+from app.services.scheduler import (
+    EVENT_SYNC_JOB,
+    SNS_SYNC_JOB,
+    parse_datetime,
+    run_scheduled_syncs,
+    scheduler_poll_seconds,
+    should_run_job,
+)
 
 
 def test_should_run_job_respects_interval(tmp_path):
@@ -24,6 +31,16 @@ def test_should_run_job_respects_interval(tmp_path):
 def test_parse_datetime_normalizes_utc():
     assert parse_datetime("2026-05-12T08:00:00Z") == datetime(2026, 5, 12, 8, 0, tzinfo=timezone.utc)
     assert parse_datetime("2026-05-12T08:00:00").tzinfo == timezone.utc
+
+
+def test_scheduler_poll_seconds_uses_shortest_configured_interval():
+    settings = SimpleNamespace(sns_sync_interval_minutes=10, event_sync_interval_minutes=60)
+    assert scheduler_poll_seconds(settings) == 600
+
+
+def test_scheduler_poll_seconds_has_one_minute_floor():
+    settings = SimpleNamespace(sns_sync_interval_minutes=0, event_sync_interval_minutes=1)
+    assert scheduler_poll_seconds(settings) == 60
 
 
 def test_run_scheduled_syncs_tracks_sns_and_event_intervals(tmp_path, monkeypatch):
