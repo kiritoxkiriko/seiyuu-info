@@ -2,9 +2,11 @@ name: seiyuu-info
 
 services:
   api:
-    build:
-      context: .
-      dockerfile: Dockerfile
+    image: ghcr.io/kiritoxkiriko/seiyuu-info-api:${IMAGE_TAG:-latest}
+    # For local image builds, uncomment this block and remove or ignore image pull.
+    # build:
+    #   context: .
+    #   dockerfile: Dockerfile
     environment:
       ALLOWED_ORIGINS: ${ALLOWED_ORIGINS:-http://localhost:4321}
       DATA_CACHE_ENABLED: ${DATA_CACHE_ENABLED:-true}
@@ -41,9 +43,11 @@ services:
     restart: unless-stopped
 
   web:
-    build:
-      context: ./web
-      dockerfile: Dockerfile
+    image: ghcr.io/kiritoxkiriko/seiyuu-info-web:${IMAGE_TAG:-latest}
+    # For local image builds, uncomment this block and remove or ignore image pull.
+    # build:
+    #   context: ./web
+    #   dockerfile: Dockerfile
     depends_on:
       api:
         condition: service_healthy

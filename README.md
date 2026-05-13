@@ -54,10 +54,11 @@ TRANSLATION_PROVIDER=deepl
 DEEPL_API_KEY=...
 ```
 
-启动：
+拉取镜像并启动：
 
 ```bash
-docker compose up --build -d
+docker compose pull
+docker compose up -d
 ```
 
 访问：
@@ -73,6 +74,16 @@ docker compose logs -f web
 ```
 
 Compose 默认把后端数据目录绑定到宿主机 `./data`，SQLite 数据库位于 `./data/nsy.sqlite3`，图片位于 `./data/media`。
+默认镜像来自 GHCR：
+
+- `ghcr.io/kiritoxkiriko/seiyuu-info-api:${IMAGE_TAG:-latest}`
+- `ghcr.io/kiritoxkiriko/seiyuu-info-web:${IMAGE_TAG:-latest}`
+
+如需固定版本，可以在 `.env` 中设置：
+
+```bash
+IMAGE_TAG=v0.1.1
+```
 
 ## 本地开发
 
@@ -158,8 +169,8 @@ curl "http://localhost:8787/api/v1/actors/aoki-hina?event_source=eventernote&sns
 
 创建 GitHub Release 后会构建并推送：
 
-- `ghcr.io/<github-owner>/seiyuu-info-api`
-- `ghcr.io/<github-owner>/seiyuu-info-web`
+- `ghcr.io/kiritoxkiriko/seiyuu-info-api`
+- `ghcr.io/kiritoxkiriko/seiyuu-info-web`
 
 镜像标签包含：
 
