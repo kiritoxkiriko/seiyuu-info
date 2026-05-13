@@ -159,8 +159,14 @@ export function EventsPanel(props: {
   const [upcomingPage, setUpcomingPage] = useState(1);
   const [pastPage, setPastPage] = useState(1);
   const today = useMemo(() => new Date().toLocaleDateString("en-CA"), []);
-  const upcomingEvents = useMemo(() => props.events.filter((event) => isUpcomingEvent(event, today)), [props.events, today]);
-  const pastEvents = useMemo(() => props.events.filter((event) => !isUpcomingEvent(event, today)), [props.events, today]);
+  const upcomingEvents = useMemo(
+    () => props.events.filter((event) => isUpcomingEvent(event, today)).toSorted((a, b) => compareEventDate(a, b, "asc")),
+    [props.events, today],
+  );
+  const pastEvents = useMemo(
+    () => props.events.filter((event) => !isUpcomingEvent(event, today)).toSorted((a, b) => compareEventDate(a, b, "desc")),
+    [props.events, today],
+  );
   const visibleUpcomingEvents = useMemo(
     () => upcomingEvents.slice((upcomingPage - 1) * EVENT_PAGE_SIZE, upcomingPage * EVENT_PAGE_SIZE),
     [upcomingEvents, upcomingPage],
@@ -383,7 +389,6 @@ function Pagination({
 
 function EventRow({ event, tone, today }: { event: EventItem; tone: "upcoming" | "past"; today: string }) {
   const countdown = tone === "upcoming" ? formatCountdown(event.date, today) : null;
-  const statusLabel = tone === "upcoming" ? upcomingStatusLabel(event.date, today) : "已结束";
   const calendarUrl = countdown ? buildIcsDataUrl(event) : null;
   const calendarFilename = countdown ? buildIcsFilename(event) : null;
   const venueMapUrl = event.venue ? buildGoogleMapsUrl(event.venue) : null;
@@ -393,9 +398,7 @@ function EventRow({ event, tone, today }: { event: EventItem; tone: "upcoming" |
       <div className="flex flex-wrap items-center gap-2 text-xs text-moss">
         <time className="rounded bg-white px-2 py-1">{event.date}</time>
         <span className="rounded bg-[#eaf6f2] px-2 py-1 text-[#356d62]">{categoryLabels[event.category]}</span>
-        <span className={`rounded px-2 py-1 ${tone === "upcoming" ? "bg-[#fff1e8] text-[#bf5f1f]" : "bg-[#edf1f4] text-[#5e6b76]"}`}>
-          {statusLabel}
-        </span>
+        {tone === "past" ? <span className="rounded bg-[#edf1f4] px-2 py-1 text-[#5e6b76]">已结束</span> : null}
         {countdown && calendarUrl ? (
           <a
             className="rounded bg-[#fff7db] px-2 py-1 text-[#9b6b13] hover:bg-[#fde9a9] hover:text-[#7a5104]"
@@ -541,6 +544,11 @@ function isUpcomingEvent(event: EventItem, today: string) {
   return /^\d{4}-\d{2}-\d{2}$/.test(event.date) && event.date >= today;
 }
 
+function compareEventDate(a: EventItem, b: EventItem, direction: "asc" | "desc") {
+  const result = a.date.localeCompare(b.date);
+  return direction === "asc" ? result : -result;
+}
+
 function formatCountdown(eventDate: string, today: string) {
   const target = parseIsoDate(eventDate);
   const current = parseIsoDate(today);
@@ -550,10 +558,10 @@ function formatCountdown(eventDate: string, today: string) {
 
   const diffDays = Math.ceil((target.getTime() - current.getTime()) / 86400000);
   if (diffDays <= 0) {
-    return "今天";
+    return "今天开始";
   }
   if (diffDays < 30) {
-    return `${diffDays}天`;
+    return `还剩${diffDays}天`;
   }
 
   const months =
@@ -561,7 +569,7 @@ function formatCountdown(eventDate: string, today: string) {
     (target.getMonth() - current.getMonth()) -
     (target.getDate() < current.getDate() ? 1 : 0);
 
-  return `${Math.max(1, months)}月`;
+  return `还剩${Math.max(1, months)}个月`;
 }
 
 function parseIsoDate(value: string) {
@@ -570,26 +578,6 @@ function parseIsoDate(value: string) {
     return null;
   }
   return new Date(Number(match[1]), Number(match[2]) - 1, Number(match[3]));
-}
-
-function upcomingStatusLabel(eventDate: string, today: string) {
-  const target = parseIsoDate(eventDate);
-  const current = parseIsoDate(today);
-  if (!target || !current) {
-    return "即将开始";
-  }
-
-  const diffDays = Math.ceil((target.getTime() - current.getTime()) / 86400000);
-  if (diffDays <= 0) {
-    return "今天开始";
-  }
-  if (diffDays <= 7) {
-    return "即将开始";
-  }
-  if (diffDays <= 30) {
-    return "近期活动";
-  }
-  return "后续预告";
 }
 
 function buildIcsDataUrl(event: EventItem) {
