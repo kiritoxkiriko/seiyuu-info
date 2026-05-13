@@ -20,32 +20,57 @@ def get_x_username(actor: Actor) -> str | None:
     return None
 
 
-async def fetch_x_posts(actor: Actor, bearer_token: str, limit: int = 20, past_days: int = 183, start_time: str | None = None) -> list[SnsPost]:
+async def fetch_x_posts(
+    actor: Actor,
+    bearer_token: str,
+    limit: int = 100,
+    past_days: int = 183,
+    start_time: str | None = None,
+    max_pages: int = 5,
+) -> list[SnsPost]:
     username = get_x_username(actor)
     if not username:
         return []
 
     headers = {"Authorization": f"Bearer {bearer_token}"}
     request_start_time = x_start_time(start_time, past_days)
+    posts: list[SnsPost] = []
+    pagination_token: str | None = None
     async with httpx.AsyncClient(timeout=12.0, headers=headers) as client:
         user_id = await fetch_x_user_id(client, username)
-        response = await client.get(
-            f"{X_API_BASE_URL}/users/{user_id}/tweets",
-            params={
-                "exclude": "retweets,replies",
-                "max_results": str(limit),
-                "start_time": request_start_time,
-                "tweet.fields": "created_at,attachments",
-                "expansions": "attachments.media_keys",
-                "media.fields": "media_key,type,url,preview_image_url",
-            },
-        )
-        response.raise_for_status()
+        for _ in range(max_pages):
+            remaining = max(0, limit - len(posts))
+            if remaining == 0:
+                break
+            params = x_timeline_params(request_start_time, min(remaining, 100), pagination_token)
+            response = await client.get(f"{X_API_BASE_URL}/users/{user_id}/tweets", params=params)
+            response.raise_for_status()
+            payload = response.json()
+            media_by_key = media_lookup(payload)
+            posts.extend(
+                tweet_to_post(actor.id, username, item, media_by_key)
+                for item in payload.get("data", [])
+                if item.get("created_at")
+            )
+            pagination_token = payload.get("meta", {}).get("next_token")
+            if not pagination_token:
+                break
 
-    payload = response.json()
-    media_by_key = media_lookup(payload)
-    posts = [tweet_to_post(actor.id, username, item, media_by_key) for item in payload.get("data", []) if item.get("created_at")]
-    return filter_relevant_posts(posts)
+    return filter_relevant_posts(posts[:limit])
+
+
+def x_timeline_params(start_time: str, max_results: int, pagination_token: str | None = None) -> dict[str, str]:
+    params = {
+        "exclude": "retweets,replies",
+        "max_results": str(max(5, min(max_results, 100))),
+        "start_time": start_time,
+        "tweet.fields": "created_at,attachments",
+        "expansions": "attachments.media_keys",
+        "media.fields": "media_key,type,url,preview_image_url",
+    }
+    if pagination_token:
+        params["pagination_token"] = pagination_token
+    return params
 
 
 async def fetch_x_user_id(client: httpx.AsyncClient, username: str) -> str:

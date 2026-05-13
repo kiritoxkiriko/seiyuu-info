@@ -36,11 +36,18 @@ async def collect_events(actor, settings, existing_ids: set[str] | None = None, 
     )
 
 
-async def collect_posts(actor, settings, token: str | None, existing_ids: set[str] | None = None, since_posted_at: str | None = None):
+async def collect_posts(
+    actor,
+    settings,
+    token: str | None,
+    existing_ids: set[str] | None = None,
+    since_posted_at: str | None = None,
+    limit: int = 100,
+):
     known_ids = existing_ids or set()
     if token:
         try:
-            posts = await fetch_x_posts(actor, token, past_days=settings.sns_fetch_past_days, start_time=since_posted_at)
+            posts = await fetch_x_posts(actor, token, limit=limit, past_days=settings.sns_fetch_past_days, start_time=since_posted_at)
             posts = [post for post in posts if post.id not in known_ids]
             return await translate_posts(filter_posts_in_window(posts, past_days=settings.sns_fetch_past_days))
         except Exception as error:

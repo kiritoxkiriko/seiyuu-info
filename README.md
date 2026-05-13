@@ -91,6 +91,12 @@ IMAGE_TAG=v0.1.6
 docker compose exec api python scripts/sync_data.py
 ```
 
+重新抓取当前配置时间窗口内的数据，忽略已有 event / SNS 的增量边界：
+
+```bash
+docker compose exec api python scripts/sync_data.py --full
+```
+
 只同步 event / SNS，不更新声优资料，也不下载声优图片：
 
 ```bash

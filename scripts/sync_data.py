@@ -41,7 +41,7 @@ async def sync(args: argparse.Namespace) -> None:
     for actor in actors:
         print(f"sync actor: {actor.id}")
         if not args.no_events:
-            existing_events = store.list_events(actor.id, source="eventernote")
+            existing_events = [] if args.full else store.list_events(actor.id, source="eventernote")
             events = await collect_events(
                 actor,
                 settings,
@@ -51,13 +51,14 @@ async def sync(args: argparse.Namespace) -> None:
             store.upsert_events(events)
             print(f"  events: {len(events)}")
         if not args.no_sns:
-            existing_posts = store.list_sns_posts(actor.id, source="x")
+            existing_posts = [] if args.full else store.list_sns_posts(actor.id, source="x")
             posts = await collect_posts(
                 actor,
                 settings,
                 os.getenv("X_BEARER_TOKEN"),
                 existing_ids={post.id for post in existing_posts},
                 since_posted_at=latest_posted_at(existing_posts),
+                limit=500 if args.full else 100,
             )
             store.upsert_sns_posts(posts)
             print(f"  sns: {len(posts)}")
@@ -70,6 +71,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--no-images", action="store_true", help="Skip actor image download/localization.")
     parser.add_argument("--no-events", action="store_true", help="Skip Eventernote/event sync.")
     parser.add_argument("--no-sns", action="store_true", help="Skip SNS sync.")
+    parser.add_argument("--full", action="store_true", help="Ignore cached sync boundaries and refresh the configured fetch window.")
     return parser.parse_args()
 
 

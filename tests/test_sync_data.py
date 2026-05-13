@@ -54,7 +54,7 @@ def test_sync_data_is_incremental_when_fetch_returns_empty(tmp_path, monkeypatch
         calls["since_event_date"] = since_event_date
         return []
 
-    async def fake_collect_posts(current_actor, settings, token, existing_ids=None, since_posted_at=None):
+    async def fake_collect_posts(current_actor, settings, token, existing_ids=None, since_posted_at=None, limit=100):
         calls["post_existing_ids"] = existing_ids
         calls["since_posted_at"] = since_posted_at
         return []
@@ -95,7 +95,7 @@ def test_sync_data_can_skip_actor_profile_and_image_sync(tmp_path, monkeypatch):
     async def fake_collect_events(current_actor, settings, existing_ids=None, since_event_date=None):
         return []
 
-    async def fake_collect_posts(current_actor, settings, token, existing_ids=None, since_posted_at=None):
+    async def fake_collect_posts(current_actor, settings, token, existing_ids=None, since_posted_at=None, limit=100):
         return []
 
     async def fake_localize_actors_images(actors, settings):
@@ -120,6 +120,80 @@ def test_sync_data_can_skip_actor_profile_and_image_sync(tmp_path, monkeypatch):
     assert calls["localize"] == 0
 
 
+def test_sync_data_full_mode_ignores_incremental_boundaries(tmp_path, monkeypatch):
+    db_url = f"sqlite:///{tmp_path / 'nsy.sqlite3'}"
+    actor = make_actor()
+    calls = {"event_existing_ids": None, "since_event_date": "unset", "post_existing_ids": None, "since_posted_at": "unset", "limit": None}
+
+    store = DataStore(db_url)
+    store.init()
+    store.upsert_actor(actor)
+    store.upsert_events(
+        [
+            Event(
+                id="event-existing",
+                actorId=actor.id,
+                title="Existing Event",
+                date="2026-06-01",
+                category="live",
+                venue="Tokyo",
+                url="https://example.com/event-existing",
+                source="eventernote",
+            )
+        ]
+    )
+    store.upsert_sns_posts(
+        [
+            SnsPost(
+                id="x-existing",
+                actorId=actor.id,
+                platform="x",
+                postedAt="2026-05-12T08:00:00+09:00",
+                text="existing tweet",
+                detailText="existing tweet full detail",
+                url="https://x.com/aoki__hina/status/1",
+                kind="original",
+                mediaUrls=[],
+            )
+        ]
+    )
+
+    async def fake_collect_events(current_actor, settings, existing_ids=None, since_event_date=None):
+        calls["event_existing_ids"] = existing_ids
+        calls["since_event_date"] = since_event_date
+        return []
+
+    async def fake_collect_posts(current_actor, settings, token, existing_ids=None, since_posted_at=None, limit=100):
+        calls["post_existing_ids"] = existing_ids
+        calls["since_posted_at"] = since_posted_at
+        calls["limit"] = limit
+        return []
+
+    async def fake_localize_actors_images(actors, settings):
+        return actors
+
+    monkeypatch.setenv("DATABASE_URL", db_url)
+    monkeypatch.setattr(sync_data, "load_env", lambda path: None)
+    monkeypatch.setattr(sync_data, "list_actors", lambda: [actor])
+    monkeypatch.setattr(sync_data, "localize_actors_images", fake_localize_actors_images)
+    monkeypatch.setattr(sync_data, "collect_events", fake_collect_events)
+    monkeypatch.setattr(sync_data, "collect_posts", fake_collect_posts)
+
+    get_settings.cache_clear()
+    try:
+        asyncio.run(sync_data.sync(sync_args(full=True)))
+    finally:
+        get_settings.cache_clear()
+
+    assert calls == {
+        "event_existing_ids": set(),
+        "since_event_date": None,
+        "post_existing_ids": set(),
+        "since_posted_at": None,
+        "limit": 500,
+    }
+
+
 def sync_args(**overrides):
     defaults = {
         "actor_id": None,
@@ -127,6 +201,7 @@ def sync_args(**overrides):
         "no_images": False,
         "no_events": False,
         "no_sns": False,
+        "full": False,
     }
     defaults.update(overrides)
     return SimpleNamespace(**defaults)
