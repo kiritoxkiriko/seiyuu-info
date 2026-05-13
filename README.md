@@ -11,7 +11,7 @@
 - 推文默认折叠长文和图片，展开后查看全文、大图和高清下载
 - event 和 SNS 支持独立抓取/展示时间窗、SQLite 落库缓存、原文/中文切换
 - 后端进程内定时同步，默认每 10 分钟同步 SNS、每 1 小时同步 event
-- 图片存储保留 provider 抽象，当前实现本地 `/media`
+- 图片存储保留 provider 抽象，手动/定时同步会把声优图片缓存到本地 `/media`
 
 ## 项目结构
 
@@ -82,10 +82,10 @@ Compose 默认把后端数据目录绑定到宿主机 `./data`，SQLite 数据�
 如需固定版本，可以在 `.env` 中设置：
 
 ```bash
-IMAGE_TAG=v0.1.1
+IMAGE_TAG=v0.1.4
 ```
 
-立即同步一次数据：
+立即同步一次数据；同步会增量写入数据库，并缓存声优图片到 `MEDIA_ROOT`：
 
 ```bash
 docker compose exec api python scripts/sync_data.py

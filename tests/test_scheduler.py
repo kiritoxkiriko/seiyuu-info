@@ -82,7 +82,11 @@ def test_run_scheduled_syncs_tracks_sns_and_event_intervals(tmp_path, monkeypatc
             )
         ]
 
+    async def fake_localize_actors_images(actors, current_settings):
+        return actors
+
     monkeypatch.setattr("app.services.scheduler.list_actors", lambda: [actor])
+    monkeypatch.setattr("app.services.scheduler.localize_actors_images", fake_localize_actors_images)
     monkeypatch.setattr("app.services.scheduler.collect_posts", fake_collect_posts)
     monkeypatch.setattr("app.services.scheduler.collect_events", fake_collect_events)
 

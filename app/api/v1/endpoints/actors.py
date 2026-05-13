@@ -28,8 +28,15 @@ router = APIRouter()
 @router.get("/actors", response_model=list[Actor])
 async def actors(request: Request, cache: bool | None = None) -> list[Actor]:
     store = await _store(cache, request)
-    configured = list_actors()
+    configured = _sort_actors_by_romanized(list_actors())
     if store:
+        cached = await store.list_actors()
+        if cached:
+            cached_by_id = {actor.id: actor for actor in cached}
+            missing = [actor for actor in configured if actor.id not in cached_by_id]
+            if missing:
+                await store.upsert_actors(missing)
+            return _sort_actors_by_romanized([cached_by_id.get(actor.id, actor) for actor in configured])
         await store.upsert_actors(configured)
     return configured
 
@@ -176,15 +183,16 @@ async def _sns_for_actor(
 
 
 async def _get_actor(actor_id: str, store: CacheStore | None) -> Actor | None:
+    if store:
+        cached = await store.get_actor(actor_id)
+        if cached:
+            return cached
     actor = get_actor(actor_id)
     if actor and store:
         await store.upsert_actor(actor)
     if actor:
         return actor
-    actor = await store.get_actor(actor_id) if store else None
-    if actor:
-        return actor
-    return actor
+    return None
 
 
 async def _store(cache: bool | None, request: Request | None) -> CacheStore | None:
@@ -208,3 +216,7 @@ def _filter_events(events: list[Event], settings) -> list[Event]:
 
 def _filter_posts(posts: list[SnsPost], settings) -> list[SnsPost]:
     return filter_posts_in_window(posts, past_days=settings.sns_display_past_days)
+
+
+def _sort_actors_by_romanized(actors: list[Actor]) -> list[Actor]:
+    return sorted(actors, key=lambda actor: actor.romanized.casefold())

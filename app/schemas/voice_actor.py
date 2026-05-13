@@ -9,7 +9,7 @@ Language = Literal["original", "zh"]
 class Photo(BaseModel):
     model_config = ConfigDict(populate_by_name=True)
 
-    url: HttpUrl
+    url: str
     alt: str
     source: str
 

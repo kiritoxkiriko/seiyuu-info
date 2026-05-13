@@ -9,7 +9,8 @@ sys.path.insert(0, str(ROOT))
 
 from app.core.config import get_settings
 from app.services.database import DataStore
-from app.services.repository import list_actors, list_events, list_sns_posts
+from app.services.images import localize_actors_images
+from app.services.repository import list_actors
 from app.services.sync_pipeline import collect_events, collect_posts
 
 
@@ -30,23 +31,24 @@ async def sync(args: argparse.Namespace) -> None:
     store = DataStore(settings.database_url)
     store.init()
 
-    actors = [actor for actor in list_actors() if not args.actor_id or actor.id == args.actor_id]
+    configured_actors = [actor for actor in list_actors() if not args.actor_id or actor.id == args.actor_id]
+    actors = await localize_actors_images(configured_actors, settings)
     store.upsert_actors(actors)
 
     for actor in actors:
         print(f"sync actor: {actor.id}")
         if not args.no_events:
             events = await collect_events(actor, settings)
-            store.replace_events(actor.id, events)
+            store.upsert_events(events)
             print(f"  events: {len(events)}")
         if not args.no_sns:
             posts = await collect_posts(actor, settings, os.getenv("X_BEARER_TOKEN"))
-            store.replace_sns_posts(actor.id, posts)
+            store.upsert_sns_posts(posts)
             print(f"  sns: {len(posts)}")
 
 
 def parse_args() -> argparse.Namespace:
-    parser = argparse.ArgumentParser(description="Sync configured seiyuu data into the local database.")
+    parser = argparse.ArgumentParser(description="Incrementally sync configured seiyuu data into the local database.")
     parser.add_argument("--actor-id", help="Only sync one actor id.")
     parser.add_argument("--no-events", action="store_true", help="Skip Eventernote/event sync.")
     parser.add_argument("--no-sns", action="store_true", help="Skip SNS sync.")

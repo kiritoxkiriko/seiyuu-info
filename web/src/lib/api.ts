@@ -234,7 +234,9 @@ async function getJson<T>(path: string): Promise<T> {
 }
 
 export async function fetchActors(): Promise<Actor[]> {
-  return getJson<Actor[]>("/api/v1/actors").catch(() => fallbackActors);
+  return getJson<Actor[]>("/api/v1/actors")
+    .catch(() => fallbackActors)
+    .then(sortActorsByRomanized);
 }
 
 export async function fetchActorDetail(actorId: string, language: Language): Promise<ActorDetail> {
@@ -243,4 +245,8 @@ export async function fetchActorDetail(actorId: string, language: Language): Pro
     events: fallbackEvents.filter((event) => event.actorId === actorId),
     sns: fallbackSns.filter((post) => post.actorId === actorId),
   }));
+}
+
+function sortActorsByRomanized(actors: Actor[]): Actor[] {
+  return [...actors].sort((left, right) => left.romanized.localeCompare(right.romanized, "en", { sensitivity: "base" }));
 }

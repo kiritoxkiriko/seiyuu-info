@@ -19,6 +19,13 @@ def test_list_actors_contains_configured_names():
     assert {"羊宮妃那", "青木陽菜", "林鼓子", "理名", "楠木ともり"}.issubset(names)
 
 
+def test_list_actors_is_sorted_by_romanized_name():
+    response = client.get("/api/v1/actors")
+    assert response.status_code == 200
+    romanized_names = [actor["romanized"] for actor in response.json()]
+    assert romanized_names == sorted(romanized_names, key=str.casefold)
+
+
 def test_actor_detail_includes_events_and_sns():
     response = client.get("/api/v1/actors/aoki-hina")
     assert response.status_code == 200

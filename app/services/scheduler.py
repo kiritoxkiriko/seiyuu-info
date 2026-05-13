@@ -5,6 +5,7 @@ from datetime import datetime, timedelta, timezone
 from typing import NoReturn
 
 from app.services.cache_store import CacheStore
+from app.services.images import localize_actors_images
 from app.services.sync_pipeline import collect_events, collect_posts
 from app.services.repository import list_actors
 
@@ -35,7 +36,7 @@ def scheduler_poll_seconds(settings) -> int:
 async def run_scheduled_syncs(store: CacheStore, settings, now: datetime | None = None) -> dict[str, int]:
     current = now or datetime.now(timezone.utc)
     token = os.getenv("X_BEARER_TOKEN")
-    actors = list_actors()
+    actors = await localize_actors_images(list_actors(), settings)
     await store.upsert_actors(actors)
 
     result = {"sns": 0, "event": 0}
