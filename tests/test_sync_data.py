@@ -56,13 +56,61 @@ def test_sync_data_is_incremental_when_fetch_returns_empty(tmp_path, monkeypatch
 
     get_settings.cache_clear()
     try:
-        asyncio.run(sync_data.sync(SimpleNamespace(actor_id=None, no_events=False, no_sns=False)))
+        asyncio.run(sync_data.sync(sync_args()))
     finally:
         get_settings.cache_clear()
 
     refreshed = DataStore(db_url)
     assert [item.id for item in refreshed.list_events(actor.id)] == ["event-existing"]
     assert [item.id for item in refreshed.list_sns_posts(actor.id)] == ["x-existing"]
+
+
+def test_sync_data_can_skip_actor_profile_and_image_sync(tmp_path, monkeypatch):
+    db_url = f"sqlite:///{tmp_path / 'nsy.sqlite3'}"
+    actor = make_actor()
+    calls = {"localize": 0}
+
+    store = DataStore(db_url)
+    store.init()
+
+    async def fake_collect_events(current_actor, settings):
+        return []
+
+    async def fake_collect_posts(current_actor, settings, token):
+        return []
+
+    async def fake_localize_actors_images(actors, settings):
+        calls["localize"] += 1
+        return actors
+
+    monkeypatch.setenv("DATABASE_URL", db_url)
+    monkeypatch.setattr(sync_data, "load_env", lambda path: None)
+    monkeypatch.setattr(sync_data, "list_actors", lambda: [actor])
+    monkeypatch.setattr(sync_data, "localize_actors_images", fake_localize_actors_images)
+    monkeypatch.setattr(sync_data, "collect_events", fake_collect_events)
+    monkeypatch.setattr(sync_data, "collect_posts", fake_collect_posts)
+
+    get_settings.cache_clear()
+    try:
+        asyncio.run(sync_data.sync(sync_args(no_actors=True, no_images=True)))
+    finally:
+        get_settings.cache_clear()
+
+    refreshed = DataStore(db_url)
+    assert refreshed.get_actor(actor.id) is None
+    assert calls["localize"] == 0
+
+
+def sync_args(**overrides):
+    defaults = {
+        "actor_id": None,
+        "no_actors": False,
+        "no_images": False,
+        "no_events": False,
+        "no_sns": False,
+    }
+    defaults.update(overrides)
+    return SimpleNamespace(**defaults)
 
 
 def make_actor() -> Actor:

@@ -31,9 +31,11 @@ async def sync(args: argparse.Namespace) -> None:
     store = DataStore(settings.database_url)
     store.init()
 
-    configured_actors = [actor for actor in list_actors() if not args.actor_id or actor.id == args.actor_id]
-    actors = await localize_actors_images(configured_actors, settings)
-    store.upsert_actors(actors)
+    actors = [actor for actor in list_actors() if not args.actor_id or actor.id == args.actor_id]
+    if not args.no_images:
+        actors = await localize_actors_images(actors, settings)
+    if not args.no_actors:
+        store.upsert_actors(actors)
 
     for actor in actors:
         print(f"sync actor: {actor.id}")
@@ -50,6 +52,8 @@ async def sync(args: argparse.Namespace) -> None:
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Incrementally sync configured seiyuu data into the local database.")
     parser.add_argument("--actor-id", help="Only sync one actor id.")
+    parser.add_argument("--no-actors", action="store_true", help="Skip actor profile database updates.")
+    parser.add_argument("--no-images", action="store_true", help="Skip actor image download/localization.")
     parser.add_argument("--no-events", action="store_true", help="Skip Eventernote/event sync.")
     parser.add_argument("--no-sns", action="store_true", help="Skip SNS sync.")
     return parser.parse_args()
