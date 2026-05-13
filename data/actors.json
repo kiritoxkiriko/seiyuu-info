@@ -27,13 +27,13 @@
           "source": "青二プロダクション"
         }
       ],
-      "specialties": ["ダンス", "関西弁"],
-      "hobbies": ["描画", "読書", "映画鑑賞", "音楽鑑賞", "アコースティックギター弾き語り", "作詞", "作曲"],
+      "specialties": ["舞蹈", "关西腔"],
+      "hobbies": ["绘画", "阅读", "电影鉴赏", "音乐鉴赏", "木吉他弹唱", "作词", "作曲"],
       "roles": [
-        {"title": "僕の心のヤバイやつ", "character": "山田杏奈"},
+        {"title": "我心里危险的东西", "character": "山田杏奈"},
         {"title": "BanG Dream! It's MyGO!!!!!", "character": "高松燈"},
-        {"title": "その着せ替え人形は恋をする", "character": "乾心寿"},
-        {"title": "小市民シリーズ", "character": "小佐内ゆき"}
+        {"title": "更衣人偶坠入爱河", "character": "乾心寿"},
+        {"title": "小市民系列", "character": "小佐内由纪"}
       ],
       "socialLinks": [
         {"platform": "x", "label": "X", "url": "https://x.com/Hina_Youmiya"},
@@ -68,13 +68,13 @@
           "source": "ブシロードミュージック"
         }
       ],
-      "specialties": ["ピアノ", "歌"],
-      "hobbies": ["ギター", "弾き語り", "一人カラオケ", "ライブ鑑賞"],
+      "specialties": ["钢琴", "歌唱"],
+      "hobbies": ["吉他", "弹唱", "一个人唱卡拉 OK", "观看演唱会"],
       "roles": [
         {"title": "BanG Dream! It's MyGO!!!!!", "character": "要楽奈"},
-        {"title": "カードファイト!! ヴァンガード will+Dress Season2", "character": "ハロナ・ウォーカー"},
-        {"title": "少女☆歌劇 レヴュースタァライト -Re LIVE-", "character": "高千穂ステラ"},
-        {"title": "GINKA", "character": "ハナ"}
+        {"title": "卡片战斗先导者 will+Dress Season2", "character": "哈罗娜·沃克"},
+        {"title": "少女☆歌剧 Revue Starlight -Re LIVE-", "character": "高千穗斯特拉"},
+        {"title": "GINKA", "character": "花"}
       ],
       "socialLinks": [
         {"platform": "x", "label": "X", "url": "https://x.com/aoki__hina"},
@@ -94,23 +94,23 @@
       "bio": "静冈县出身，LIBERTE 所属。擅长鼓、打击乐和钢琴。代表角色包括《BanG Dream! It's MyGO!!!!!》椎名立希、《ラブライブ！虹ヶ咲学園スクールアイドル同好会》優木せつ菜。",
       "profile_url": "https://fan.pia.jp/cocohayashi/",
       "officialPhoto": {
-        "url": "https://prcdn.freetls.fastly.net/release_image/11710/3628/11710-3628-36d180a62147de4f8907d71ddef456e6-1278x586.jpg?width=536&quality=85%2C75&format=jpeg&auto=webp&fit=bounds&bg-color=fff",
-        "alt": "林鼓子 Official Site / Official Fanclub 画像",
-        "source": "林鼓子 Official Site / PR TIMES"
+        "url": "https://pbs.twimg.com/media/HHEg5WhboAAZWTt?format=jpg&name=large",
+        "alt": "林鼓子 X 投稿写真",
+        "source": "X / cocohayashi515"
       },
       "gallery": [
         {
-          "url": "https://prcdn.freetls.fastly.net/release_image/11710/3628/11710-3628-36d180a62147de4f8907d71ddef456e6-1278x586.jpg?width=536&quality=85%2C75&format=jpeg&auto=webp&fit=bounds&bg-color=fff",
-          "alt": "林鼓子 Official Site / Official Fanclub 画像",
-          "source": "林鼓子 Official Site / PR TIMES"
+          "url": "https://pbs.twimg.com/media/HHEg5WhboAAZWTt?format=jpg&name=large",
+          "alt": "林鼓子 X 投稿写真",
+          "source": "X / cocohayashi515"
         }
       ],
-      "specialties": ["ドラム", "パーカッション全般", "ピアノ"],
-      "hobbies": ["ミュージカル鑑賞", "イラストを描くこと"],
+      "specialties": ["架子鼓", "打击乐", "钢琴"],
+      "hobbies": ["音乐剧鉴赏", "画插画"],
       "roles": [
         {"title": "BanG Dream! It's MyGO!!!!!", "character": "椎名立希"},
-        {"title": "ラブライブ！虹ヶ咲学園スクールアイドル同好会", "character": "優木せつ菜 / 中川菜々"},
-        {"title": "キラッとプリ☆チャン", "character": "桃山みらい"}
+        {"title": "Love Live! 虹咲学园学园偶像同好会", "character": "优木雪菜 / 中川菜菜"},
+        {"title": "美妙频道", "character": "桃山未来"}
       ],
       "socialLinks": [
         {"platform": "x", "label": "X", "url": "https://x.com/cocohayashi515"},
@@ -142,9 +142,9 @@
         }
       ],
       "specialties": ["睡眠"],
-      "hobbies": ["絵を描くこと"],
+      "hobbies": ["绘画"],
       "roles": [
-        {"title": "ガールズバンドクライ", "character": "井芹仁菜"}
+        {"title": "Girls Band Cry", "character": "井芹仁菜"}
       ],
       "socialLinks": [
         {"platform": "x", "label": "X", "url": "https://x.com/rina_togetoge"},
@@ -175,13 +175,13 @@
           "source": "Sony Music Artists"
         }
       ],
-      "specialties": ["絵を描くこと", "トランペット"],
-      "hobbies": ["作詞・作曲", "音楽を弾く、聴くこと", "画材屋さんめぐり", "ゲーム", "ネットサーフィン"],
+      "specialties": ["绘画", "小号"],
+      "hobbies": ["作词作曲", "演奏和听音乐", "逛画材店", "游戏", "上网"],
       "roles": [
-        {"title": "チェンソーマン", "character": "マキマ"},
-        {"title": "ソードアート・オンライン オルタナティブ ガンゲイル・オンライン", "character": "レン / 小比類巻香蓮"},
-        {"title": "プロジェクトセカイ カラフルステージ! feat. 初音ミク", "character": "宵崎奏"},
-        {"title": "ヘブンバーンズレッド", "character": "茅森月歌"}
+        {"title": "链锯人", "character": "玛奇玛"},
+        {"title": "刀剑神域外传 Gun Gale Online", "character": "莲 / 小比类卷香莲"},
+        {"title": "世界计划 缤纷舞台！feat. 初音未来", "character": "宵崎奏"},
+        {"title": "绯染天空", "character": "茅森月歌"}
       ],
       "socialLinks": [
         {"platform": "x", "label": "X", "url": "https://x.com/tomori_kusunoki"},
@@ -212,12 +212,12 @@
           "source": "TACHI PRO"
         }
       ],
-      "specialties": ["ギター", "歌"],
-      "hobbies": ["スノーボード", "バスケットボール", "ギター"],
+      "specialties": ["吉他", "歌唱"],
+      "hobbies": ["单板滑雪", "篮球", "吉他"],
       "roles": [
-        {"title": "少女☆歌劇 レヴュースタァライト", "character": "リュウ・メイファン"},
-        {"title": "ウタヒメドリーム", "character": "SUKURAKO"},
-        {"title": "おとうさんといっしょ", "character": "ゆめ"}
+        {"title": "少女☆歌剧 Revue Starlight", "character": "刘美帆"},
+        {"title": "歌姬梦想", "character": "SUKURAKO"},
+        {"title": "和爸爸一起", "character": "梦"}
       ],
       "socialLinks": [
         {"platform": "x", "label": "X", "url": "https://x.com/takeuchiyume"},
@@ -249,13 +249,13 @@
           "source": "日本コロムビア"
         }
       ],
-      "specialties": ["イラストを描くこと", "空手", "歌"],
-      "hobbies": ["音楽鑑賞", "映画鑑賞", "読書"],
+      "specialties": ["画插画", "空手道", "歌唱"],
+      "hobbies": ["音乐鉴赏", "电影鉴赏", "阅读"],
       "roles": [
-        {"title": "アイカツスターズ!", "character": "虹野ゆめ"},
-        {"title": "メイドインアビス", "character": "リコ"},
-        {"title": "機動戦士ガンダム 水星の魔女", "character": "チュアチュリー・パンランチ"},
-        {"title": "かぐや様は告らせたい", "character": "伊井野ミコ"}
+        {"title": "偶像活动 Stars!", "character": "虹野梦"},
+        {"title": "来自深渊", "character": "莉可"},
+        {"title": "机动战士高达 水星的魔女", "character": "雀丘莉·潘兰杞"},
+        {"title": "辉夜大小姐想让我告白", "character": "伊井野弥子"}
       ],
       "socialLinks": [
         {"platform": "x", "label": "X", "url": "https://x.com/miyju_tomita"},
@@ -286,13 +286,13 @@
           "source": "Beffect"
         }
       ],
-      "specialties": ["ベース", "音楽ゲーム"],
-      "hobbies": ["ゲームプレイ", "散歩", "歌って踊ること"],
+      "specialties": ["贝斯", "音乐游戏"],
+      "hobbies": ["玩游戏", "散步", "唱歌跳舞"],
       "roles": [
-        {"title": "BanG Dream!", "character": "今井リサ"},
-        {"title": "プロジェクトセカイ カラフルステージ! feat. 初音ミク", "character": "日野森志歩"},
-        {"title": "アイドルマスター シンデレラガールズ", "character": "乙倉悠貴"},
-        {"title": "遊☆戯☆王VRAINS", "character": "財前葵 / ブルーエンジェル"}
+        {"title": "BanG Dream!", "character": "今井莉莎"},
+        {"title": "世界计划 缤纷舞台！feat. 初音未来", "character": "日野森志步"},
+        {"title": "偶像大师 灰姑娘女孩", "character": "乙仓悠贵"},
+        {"title": "游戏王VRAINS", "character": "财前葵 / 蓝天使"}
       ],
       "socialLinks": [
         {"platform": "x", "label": "X", "url": "https://x.com/Yuki_Nakashim"},
@@ -323,13 +323,13 @@
           "source": "青二プロダクション"
         }
       ],
-      "specialties": ["ダンス"],
-      "hobbies": ["麻雀", "ギター", "料理", "ヒューマンドラマ観賞"],
+      "specialties": ["舞蹈"],
+      "hobbies": ["麻将", "吉他", "料理", "人文剧情作品鉴赏"],
       "roles": [
-        {"title": "機動戦士ガンダム 水星の魔女", "character": "セセリア・ドート"},
-        {"title": "アイドルマスター シャイニーカラーズ", "character": "緋田美琴"},
-        {"title": "るろうに剣心 -明治剣客浪漫譚-", "character": "巻町操"},
-        {"title": "ウマ娘 プリティーダービー", "character": "ダイタクヘリオス"}
+        {"title": "机动战士高达 水星的魔女", "character": "塞西莉亚·多特"},
+        {"title": "偶像大师 闪耀色彩", "character": "绯田美琴"},
+        {"title": "浪客剑心 明治剑客浪漫谭", "character": "卷町操"},
+        {"title": "赛马娘 Pretty Derby", "character": "大拓太阳神"}
       ],
       "socialLinks": [
         {"platform": "x", "label": "X", "url": "https://x.com/ayaMiNTgreen"},

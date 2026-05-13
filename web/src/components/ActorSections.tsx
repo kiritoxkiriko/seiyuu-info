@@ -132,9 +132,12 @@ export function Hero({ actor, loading }: { actor: Actor; loading: boolean }) {
           <p className="mt-4 max-w-2xl text-sm leading-7 text-[#d4dde6]">{profileIntro(actor)}</p>
           <div className="mt-5 flex flex-wrap gap-2">
             {actor.roles.slice(0, 4).map((role) => (
-              <span key={`${role.title}-${role.character}`} className="rounded-md border border-white/[0.12] bg-white/[0.08] px-3 py-2 text-xs text-[#edf5f7]">
-                <span className="block font-semibold">{role.character}</span>
-                <span className="mt-0.5 block text-[#b8c7d3]">{role.title}</span>
+              <span
+                key={`${role.title}-${role.character}`}
+                className="min-w-[9rem] max-w-full rounded-md border border-white/[0.12] bg-white/[0.08] px-3 py-2 text-xs text-[#edf5f7]"
+              >
+                <span className="block break-words font-semibold leading-5">{role.character}</span>
+                <span className="mt-0.5 block break-words leading-5 text-[#b8c7d3]">{role.title}</span>
               </span>
             ))}
           </div>
@@ -732,7 +735,17 @@ function TraitCard({ label, items }: { label: string; items: string[] }) {
   return (
     <div className="rounded-md border border-white/[0.12] bg-white/[0.08] p-3">
       <p className="text-xs text-[#9adfcb]">{label}</p>
-      <p className="mt-1 max-h-12 overflow-hidden text-sm font-medium leading-6 text-white">{items.length ? items.join(" / ") : "未配置"}</p>
+      {items.length ? (
+        <div className="mt-2 flex flex-wrap gap-1.5">
+          {items.map((item) => (
+            <span key={item} className="max-w-full rounded border border-white/[0.12] bg-white/[0.07] px-2 py-1 text-xs font-medium leading-5 text-white break-words">
+              {item}
+            </span>
+          ))}
+        </div>
+      ) : (
+        <p className="mt-1 text-sm font-medium leading-6 text-white">未配置</p>
+      )}
     </div>
   );
 }

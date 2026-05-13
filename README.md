@@ -82,7 +82,7 @@ Compose 默认把后端数据目录绑定到宿主机 `./data`，SQLite 数据�
 如需固定版本，可以在 `.env` 中设置：
 
 ```bash
-IMAGE_TAG=v0.1.5
+IMAGE_TAG=v0.1.6
 ```
 
 立即同步一次数据；同步会增量写入数据库，并缓存声优图片到 `MEDIA_ROOT`：
