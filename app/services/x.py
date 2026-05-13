@@ -1,3 +1,4 @@
+from datetime import datetime, timedelta, timezone
 from urllib.parse import urlparse
 
 import httpx
@@ -19,12 +20,13 @@ def get_x_username(actor: Actor) -> str | None:
     return None
 
 
-async def fetch_x_posts(actor: Actor, bearer_token: str, limit: int = 20, past_days: int = 183) -> list[SnsPost]:
+async def fetch_x_posts(actor: Actor, bearer_token: str, limit: int = 20, past_days: int = 183, start_time: str | None = None) -> list[SnsPost]:
     username = get_x_username(actor)
     if not username:
         return []
 
     headers = {"Authorization": f"Bearer {bearer_token}"}
+    request_start_time = x_start_time(start_time, past_days)
     async with httpx.AsyncClient(timeout=12.0, headers=headers) as client:
         user_id = await fetch_x_user_id(client, username)
         response = await client.get(
@@ -32,7 +34,7 @@ async def fetch_x_posts(actor: Actor, bearer_token: str, limit: int = 20, past_d
             params={
                 "exclude": "retweets,replies",
                 "max_results": str(limit),
-                "start_time": past_days_start_iso(past_days),
+                "start_time": request_start_time,
                 "tweet.fields": "created_at,attachments",
                 "expansions": "attachments.media_keys",
                 "media.fields": "media_key,type,url,preview_image_url",
@@ -80,3 +82,25 @@ def tweet_to_post(actor_id: str, username: str, item: dict, media_by_key: dict[s
         kind="original",
         mediaUrls=media_urls,
     )
+
+
+def x_start_time(last_posted_at: str | None, past_days: int = 183) -> str:
+    window_start = _parse_datetime(past_days_start_iso(past_days))
+    if not last_posted_at:
+        return _format_x_time(window_start)
+    try:
+        last_post_time = _parse_datetime(last_posted_at) + timedelta(seconds=1)
+    except ValueError:
+        return _format_x_time(window_start)
+    return _format_x_time(max(window_start, last_post_time))
+
+
+def _parse_datetime(value: str) -> datetime:
+    parsed = datetime.fromisoformat(value.replace("Z", "+00:00"))
+    if parsed.tzinfo is None:
+        return parsed.replace(tzinfo=timezone.utc)
+    return parsed.astimezone(timezone.utc)
+
+
+def _format_x_time(value: datetime) -> str:
+    return value.astimezone(timezone.utc).replace(microsecond=0).isoformat().replace("+00:00", "Z")

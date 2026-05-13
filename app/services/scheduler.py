@@ -43,14 +43,27 @@ async def run_scheduled_syncs(store: CacheStore, settings, now: datetime | None 
 
     if await should_run_job(store, SNS_SYNC_JOB, settings.sns_sync_interval_minutes, current):
         for actor in actors:
-            posts = await collect_posts(actor, settings, token)
+            existing_posts = await store.list_sns_posts(actor.id, source="x")
+            posts = await collect_posts(
+                actor,
+                settings,
+                token,
+                existing_ids={post.id for post in existing_posts},
+                since_posted_at=latest_posted_at(existing_posts),
+            )
             await store.upsert_sns_posts(posts)
             result["sns"] += len(posts)
         await store.touch_job_run(SNS_SYNC_JOB, current.isoformat(), json.dumps({"actors": len(actors)}))
 
     if await should_run_job(store, EVENT_SYNC_JOB, settings.event_sync_interval_minutes, current):
         for actor in actors:
-            events = await collect_events(actor, settings)
+            existing_events = await store.list_events(actor.id, source="eventernote")
+            events = await collect_events(
+                actor,
+                settings,
+                existing_ids={event.id for event in existing_events},
+                since_event_date=latest_event_date(existing_events),
+            )
             await store.upsert_events(events)
             result["event"] += len(events)
         await store.touch_job_run(EVENT_SYNC_JOB, current.isoformat(), json.dumps({"actors": len(actors)}))
@@ -72,3 +85,16 @@ def parse_datetime(value: str) -> datetime:
     if parsed.tzinfo is None:
         return parsed.replace(tzinfo=timezone.utc)
     return parsed.astimezone(timezone.utc)
+
+
+def latest_posted_at(posts) -> str | None:
+    if not posts:
+        return None
+    return max(posts, key=lambda post: parse_datetime(post.posted_at)).posted_at
+
+
+def latest_event_date(events) -> str | None:
+    dated_events = [event for event in events if event.date != "未定"]
+    if not dated_events:
+        return None
+    return max(event.date for event in dated_events)

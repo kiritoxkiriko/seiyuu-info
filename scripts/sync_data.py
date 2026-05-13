@@ -2,6 +2,7 @@ import argparse
 import asyncio
 import os
 import sys
+from datetime import datetime, timezone
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -40,11 +41,24 @@ async def sync(args: argparse.Namespace) -> None:
     for actor in actors:
         print(f"sync actor: {actor.id}")
         if not args.no_events:
-            events = await collect_events(actor, settings)
+            existing_events = store.list_events(actor.id, source="eventernote")
+            events = await collect_events(
+                actor,
+                settings,
+                existing_ids={event.id for event in existing_events},
+                since_event_date=latest_event_date(existing_events),
+            )
             store.upsert_events(events)
             print(f"  events: {len(events)}")
         if not args.no_sns:
-            posts = await collect_posts(actor, settings, os.getenv("X_BEARER_TOKEN"))
+            existing_posts = store.list_sns_posts(actor.id, source="x")
+            posts = await collect_posts(
+                actor,
+                settings,
+                os.getenv("X_BEARER_TOKEN"),
+                existing_ids={post.id for post in existing_posts},
+                since_posted_at=latest_posted_at(existing_posts),
+            )
             store.upsert_sns_posts(posts)
             print(f"  sns: {len(posts)}")
 
@@ -57,6 +71,26 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--no-events", action="store_true", help="Skip Eventernote/event sync.")
     parser.add_argument("--no-sns", action="store_true", help="Skip SNS sync.")
     return parser.parse_args()
+
+
+def latest_posted_at(posts) -> str | None:
+    if not posts:
+        return None
+    return max(posts, key=lambda post: parse_datetime(post.posted_at)).posted_at
+
+
+def latest_event_date(events) -> str | None:
+    dated_events = [event for event in events if event.date != "未定"]
+    if not dated_events:
+        return None
+    return max(event.date for event in dated_events)
+
+
+def parse_datetime(value: str) -> datetime:
+    parsed = datetime.fromisoformat(value.replace("Z", "+00:00"))
+    if parsed.tzinfo is None:
+        return parsed.replace(tzinfo=timezone.utc)
+    return parsed.astimezone(timezone.utc)
 
 
 if __name__ == "__main__":

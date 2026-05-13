@@ -1,6 +1,7 @@
 import re
 from html.parser import HTMLParser
 from typing import Literal
+from urllib.parse import urlencode, urlsplit, urlunsplit, parse_qsl
 
 import httpx
 
@@ -94,22 +95,74 @@ class EventernoteParser(HTMLParser):
         )
 
 
-async def fetch_eventernote_events(actor_id: str, url: str, limit: int = 30) -> list[Event]:
-    last_error: Exception | None = None
+async def fetch_eventernote_events(
+    actor_id: str,
+    url: str,
+    limit: int = 30,
+    known_ids: set[str] | None = None,
+    stop_before_date: str | None = None,
+    max_pages: int = 10,
+) -> list[Event]:
+    collected: list[Event] = []
+    seen_ids: set[str] = set()
+    known_event_ids = known_ids or set()
     async with httpx.AsyncClient(timeout=15.0, follow_redirects=True) as client:
-        for _ in range(2):
-            try:
-                response = await client.get(url, headers={"User-Agent": "nsy-station/0.1"})
-                response.raise_for_status()
+        for page in range(1, max_pages + 1):
+            response = await _fetch_eventernote_page(client, page_url(url, page))
+            parser = EventernoteParser(actor_id)
+            parser.feed(response.text)
+            page_events = sort_events_desc(parser.events)
+            if not page_events:
                 break
-            except httpx.HTTPError as error:
-                last_error = error
-        else:
-            if last_error:
-                raise last_error
-    parser = EventernoteParser(actor_id)
-    parser.feed(response.text)
-    return sort_events_desc(parser.events)[:limit]
+
+            should_stop = False
+            for event in page_events:
+                if event.id in seen_ids:
+                    continue
+                seen_ids.add(event.id)
+                if event.id in known_event_ids:
+                    should_stop = True
+                    continue
+                if stop_before_date and _known_dated_event_is_old(event.date, stop_before_date):
+                    should_stop = True
+                    continue
+                collected.append(event)
+                if len(collected) >= limit:
+                    should_stop = True
+                    break
+            if should_stop:
+                break
+    return sort_events_desc(collected)[:limit]
+
+
+async def _fetch_eventernote_page(client: httpx.AsyncClient, url: str) -> httpx.Response:
+    last_error: Exception | None = None
+    for _ in range(2):
+        try:
+            response = await client.get(url, headers={"User-Agent": "nsy-station/0.1"})
+            response.raise_for_status()
+            return response
+        except httpx.HTTPError as error:
+            last_error = error
+    if last_error:
+        raise last_error
+    raise RuntimeError("eventernote fetch failed")
+
+
+def page_url(url: str, page: int) -> str:
+    if page <= 1:
+        return url
+    parts = urlsplit(url)
+    query = dict(parse_qsl(parts.query, keep_blank_values=True))
+    query["limit"] = query.get("limit", "20")
+    query["page"] = str(page)
+    return urlunsplit((parts.scheme, parts.netloc, parts.path, urlencode(query), parts.fragment))
+
+
+def _known_dated_event_is_old(event_date: str, stop_before_date: str) -> bool:
+    if event_date == "未定":
+        return False
+    return event_date <= stop_before_date
 
 
 def guess_category(title: str) -> Literal["live", "stage", "talk", "release", "broadcast", "other"]:

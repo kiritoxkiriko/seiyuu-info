@@ -51,7 +51,7 @@ def test_run_scheduled_syncs_tracks_sns_and_event_intervals(tmp_path, monkeypatc
     settings = SimpleNamespace(sns_sync_interval_minutes=10, event_sync_interval_minutes=60)
     calls = {"sns": 0, "event": 0}
 
-    async def fake_collect_posts(current_actor, current_settings, token):
+    async def fake_collect_posts(current_actor, current_settings, token, existing_ids=None, since_posted_at=None):
         calls["sns"] += 1
         return [
             SnsPost(
@@ -67,7 +67,7 @@ def test_run_scheduled_syncs_tracks_sns_and_event_intervals(tmp_path, monkeypatc
             )
         ]
 
-    async def fake_collect_events(current_actor, current_settings):
+    async def fake_collect_events(current_actor, current_settings, existing_ids=None, since_event_date=None):
         calls["event"] += 1
         return [
             Event(

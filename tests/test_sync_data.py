@@ -10,6 +10,7 @@ from scripts import sync_data
 def test_sync_data_is_incremental_when_fetch_returns_empty(tmp_path, monkeypatch):
     db_url = f"sqlite:///{tmp_path / 'nsy.sqlite3'}"
     actor = make_actor()
+    calls = {"event_existing_ids": set(), "since_event_date": None, "post_existing_ids": set(), "since_posted_at": None}
     event = Event(
         id="event-existing",
         actorId=actor.id,
@@ -19,6 +20,16 @@ def test_sync_data_is_incremental_when_fetch_returns_empty(tmp_path, monkeypatch
         venue="Tokyo",
         url="https://example.com/event-existing",
         source="eventernote",
+    )
+    seed_event = Event(
+        id="seed-future",
+        actorId=actor.id,
+        title="Seed Future Event",
+        date="2027-01-01",
+        category="live",
+        venue="Tokyo",
+        url="https://example.com/seed-future",
+        source="seed",
     )
     post = SnsPost(
         id="x-existing",
@@ -35,13 +46,17 @@ def test_sync_data_is_incremental_when_fetch_returns_empty(tmp_path, monkeypatch
     store = DataStore(db_url)
     store.init()
     store.upsert_actor(actor)
-    store.upsert_events([event])
+    store.upsert_events([event, seed_event])
     store.upsert_sns_posts([post])
 
-    async def fake_collect_events(current_actor, settings):
+    async def fake_collect_events(current_actor, settings, existing_ids=None, since_event_date=None):
+        calls["event_existing_ids"] = existing_ids
+        calls["since_event_date"] = since_event_date
         return []
 
-    async def fake_collect_posts(current_actor, settings, token):
+    async def fake_collect_posts(current_actor, settings, token, existing_ids=None, since_posted_at=None):
+        calls["post_existing_ids"] = existing_ids
+        calls["since_posted_at"] = since_posted_at
         return []
 
     async def fake_localize_actors_images(actors, settings):
@@ -61,8 +76,12 @@ def test_sync_data_is_incremental_when_fetch_returns_empty(tmp_path, monkeypatch
         get_settings.cache_clear()
 
     refreshed = DataStore(db_url)
-    assert [item.id for item in refreshed.list_events(actor.id)] == ["event-existing"]
+    assert {item.id for item in refreshed.list_events(actor.id)} == {"event-existing", "seed-future"}
     assert [item.id for item in refreshed.list_sns_posts(actor.id)] == ["x-existing"]
+    assert calls["event_existing_ids"] == {"event-existing"}
+    assert calls["since_event_date"] == "2026-06-01"
+    assert calls["post_existing_ids"] == {"x-existing"}
+    assert calls["since_posted_at"] == "2026-05-12T08:00:00+09:00"
 
 
 def test_sync_data_can_skip_actor_profile_and_image_sync(tmp_path, monkeypatch):
@@ -73,10 +92,10 @@ def test_sync_data_can_skip_actor_profile_and_image_sync(tmp_path, monkeypatch):
     store = DataStore(db_url)
     store.init()
 
-    async def fake_collect_events(current_actor, settings):
+    async def fake_collect_events(current_actor, settings, existing_ids=None, since_event_date=None):
         return []
 
-    async def fake_collect_posts(current_actor, settings, token):
+    async def fake_collect_posts(current_actor, settings, token, existing_ids=None, since_posted_at=None):
         return []
 
     async def fake_localize_actors_images(actors, settings):

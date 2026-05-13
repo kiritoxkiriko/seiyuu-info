@@ -1,5 +1,7 @@
 from app.schemas.voice_actor import Actor
-from app.services.x import get_x_username, media_lookup, tweet_to_post
+from datetime import date
+
+from app.services.x import get_x_username, media_lookup, tweet_to_post, x_start_time
 
 
 def test_get_x_username_from_actor_social_links():
@@ -54,3 +56,21 @@ def test_tweet_to_post_maps_photo_and_preview_media_urls():
         "https://pbs.twimg.com/media/preview.jpg",
     ]
     assert post.detail_text == "photo tweet"
+
+
+def test_x_start_time_uses_latest_seen_post_plus_one_second(monkeypatch):
+    monkeypatch.setattr("app.services.date_window.date", FixedDate)
+
+    assert x_start_time("2026-05-12T08:00:00+09:00", past_days=183) == "2026-05-11T23:00:01Z"
+
+
+def test_x_start_time_respects_fetch_window_when_latest_seen_is_old(monkeypatch):
+    monkeypatch.setattr("app.services.date_window.date", FixedDate)
+
+    assert x_start_time("2025-01-01T00:00:00Z", past_days=183) == "2025-11-11T00:00:00Z"
+
+
+class FixedDate(date):
+    @classmethod
+    def today(cls):
+        return cls(2026, 5, 13)
